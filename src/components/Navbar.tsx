@@ -27,7 +27,7 @@ const Navbar = () => {
                 + Submit
               </Link>
             <div className="flex items-center gap-2 bg-white border border-zinc-300 px-4 py-1 rounded-xs">
-              <Link href={`/profile/${user.name ?? user.id}`}> {/*change this to github handle when we have that */}
+              <Link href={`/profile/${user.githubHandle ?? user.id}`}>
                 <img
                   src={user.image ?? ""}
                   alt={user.name}

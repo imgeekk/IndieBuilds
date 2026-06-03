@@ -27,7 +27,7 @@ export default function WeekHeader({ weekId, prevWeekId, nextWeekId, launchCount
         {prevWeekId && (
           <Link
             href={`/week/${prevWeekId}`}
-            className="p-1.5 rounded-xs border border-zinc-700 text-zinc-800 hover:text-zinc-500 hover:border-zinc-600 transition-colors"
+            className="p-1.5 rounded-xs border border-zinc-500 text-zinc-500 hover:text-zinc-700 hover:border-zinc-600 transition-colors"
           >
             <FaChevronLeft size={16} />
           </Link>
@@ -35,7 +35,7 @@ export default function WeekHeader({ weekId, prevWeekId, nextWeekId, launchCount
         {nextWeekId && (
           <Link
             href={`/week/${nextWeekId}`}
-            className="p-1.5 rounded-xs border border-zinc-700 text-zinc-800 hover:text-zinc-500 hover:border-zinc-600 transition-colors"
+            className="p-1.5 rounded-xs border border-zinc-500 text-zinc-500 hover:text-zinc-700 hover:border-zinc-600 transition-colors"
           >
             <FaChevronRight size={16} />
           </Link>

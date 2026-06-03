@@ -148,7 +148,7 @@ export default function SubmitPage() {
           <button
             onClick={handleSubmit}
             disabled={submitting}
-            className="bg-orange-500 hover:bg-orange-400 disabled:opacity-50 text-zinc-900 cursor-pointer font-[inter-medium] py-2.5 rounded-lg transition-colors"
+            className="bg-orange-500 hover:bg-orange-400 disabled:opacity-50 text-zinc-900 cursor-pointer font-[inter-medium] py-2.5 rounded-mdF transition-colors"
           >
             {submitting ? "Submitting..." : "Launch it"}
           </button>

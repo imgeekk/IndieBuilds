@@ -38,14 +38,14 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
   }
 
   return (
-    <div className="flex gap-4 p-4 rounded-sm border border-zinc-300 bg-white hover:border-zinc-400 shadow-sm transition-colors text-zinc-700 font-[inter-regular]">
+    <div className="flex gap-4 p-4 rounded-md bg-white border border-zinc-300 hover:border-orange-300 shadow-xs transition-colors text-zinc-800 font-[inter-regular]">
 
       {/* Vote button */}
       <button
         onClick={handleVote}
         disabled={loading}
         className=
-          {`flex flex-col items-center justify-center min-w-[52px] h-[52px] rounded-xs border text-sm cursor-pointer font-[inter-semibold] transition-colors
+          {`flex flex-col items-center justify-center min-w-[52px] h-[52px] rounded-sm border text-sm cursor-pointer font-[inter-semibold] transition-colors
           ${voted
             ? "bg-orange-500/10 border-orange-500/50 text-orange-400"
             : "bg-zinc-100 border-zinc-500 text-zinc-500 hover:border-zinc-500 hover:text-zinc-400"

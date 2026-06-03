@@ -7,6 +7,21 @@ export const auth = betterAuth({
     provider: "postgresql",
   }),
 
+  user: {
+    additionalFields: {
+      githubHandle: {
+        type: "string",
+        required: false,
+        input: false,
+      },
+      image: {
+        type: "string",
+        required: false,
+        input: false,
+      },
+    },
+  },
+
   socialProviders: {
     github: {
       clientId: process.env.GITHUB_CLIENT_ID!,
@@ -21,23 +36,9 @@ export const auth = betterAuth({
 
   session: {
     expiresIn: 60 * 60 * 24 * 30, // 30 days
-    updateAge: 60 * 60 * 24,       // refresh if older than 1 day
+    updateAge: 60 * 60 * 24, // refresh if older than 1 day
   },
 
-   callbacks: {
-    async signIn({ user, account, profile }) {
-      if (account?.provider === "github" && profile) {
-        await prisma.user.update({
-          where: { id: user.id },
-          data: {
-            githubHandle: (profile as any).login,
-            image: (profile as any).avatar_url,
-          },
-        });
-      }
-      return true;
-    },
-  },
 });
 
 export type Session = typeof auth.$Infer.Session;
