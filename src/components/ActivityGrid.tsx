@@ -26,11 +26,11 @@ export default function ActivityGrid({ activeWeeks, allWeeks }: ActivityGridProp
               className={cn(
                 "w-4 h-4 rounded-sm transition-colors cursor-default",
                 isActive 
-                  ? "bg-orange-400 border border-orange-500 shadow-[0_0_8px_rgba(251,146,60,0.4)]" 
-                  : "bg-zinc-300 border border-zinc-400"
+                  ? "bg-purple-400 border border-purple-500 shadow-[0_0_8px_rgba(192,132,252,0.4)]" 
+                  : "bg-card border border-card-border"
               )}
             />
-            <span className="text-[9px] text-zinc-500 font-mono leading-none">
+            <span className="text-[9px] text-muted font-mono leading-none">
               {weekLabel}
             </span>
           </div>

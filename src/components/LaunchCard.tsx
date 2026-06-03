@@ -38,7 +38,7 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
   }
 
   return (
-    <div className="flex gap-4 p-4 rounded-md bg-white border border-zinc-300 hover:border-orange-300 shadow-xs transition-colors text-zinc-800 font-[inter-regular]">
+    <div className="flex gap-4 p-4 rounded-md bg-card border border-card-border hover:border-purple-500 shadow-xs transition-colors text-foreground font-[inter-regular]">
 
       {/* Vote button */}
       <button
@@ -47,8 +47,8 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
         className=
           {`flex flex-col items-center justify-center min-w-[52px] h-[52px] rounded-sm border text-sm cursor-pointer font-[inter-semibold] transition-colors
           ${voted
-            ? "bg-orange-500/10 border-orange-500/50 text-orange-400"
-            : "bg-zinc-100 border-zinc-500 text-zinc-500 hover:border-zinc-500 hover:text-zinc-400"
+            ? "bg-purple-500/10 border-purple-500/50 text-purple-400"
+            : "bg-card border-card-border text-muted hover:border-zinc-500 hover:text-foreground"
           }`}
       >
         <span className="text-xs">▲</span>
@@ -60,24 +60,24 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
         <div className="flex items-start justify-between gap-2">
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-[inter-semibold] ">{launch.name}</span>
+              <span className="font-[inter-semibold] text-foreground">{launch.name}</span>
               <a
                 href={launch.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-zinc-500 hover:text-zinc-400 transition-colors"
+                className="text-muted hover:text-foreground transition-colors"
               >
                 <FaExternalLinkAlt size={13} />
               </a>
             </div>
-            <p className="text-sm text-zinc-500 mt-0.5">{launch.tagline}</p>
+            <p className="text-sm text-muted mt-0.5">{launch.tagline}</p>
           </div>
         </div>
 
         <div className="flex items-center gap-3 mt-3 flex-wrap">
           {/* Stack chips */}
           {launch.stack.slice(0, 4).map((tech) => (
-            <span key={tech} className="text-xs bg-zinc-800 text-zinc-500 px-2 py-0.5 rounded-md border border-zinc-700">
+            <span key={tech} className="text-xs bg-card text-muted px-2 py-0.5 rounded-md border border-card-border">
               {tech}
             </span>
           ))}
@@ -85,12 +85,12 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
           {/* Builder */}
           <Link
             href={`/profile/${launch.user.githubHandle ?? ""}`}
-            className="ml-auto flex items-center gap-1.5 text-xs text-zinc-900 hover:text-zinc-800 transition-colors"
+            className="ml-auto flex items-center gap-1.5 text-sm text-foreground hover:text-secondary transition-colors"
           >
             <img
               src={launch.user.image ?? ""}
               alt={launch.user.name}
-              className="w-4 h-4 rounded-full"
+              className="w-5 h-5 rounded-full"
             />
             {launch.user.githubHandle ?? launch.user.name}
           </Link>
@@ -98,7 +98,7 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
           {/* Comment count */}
           <Link
             href={`/launch/${launch.id}`}
-            className="flex items-center gap-1 text-xs text-zinc-900 hover:text-zinc-800 transition-colors"
+            className="flex items-center gap-1 text-sm text-foreground hover:text-secondary transition-colors"
           >
             <FaFacebookMessenger size={12} />
             {launch._count.comments}

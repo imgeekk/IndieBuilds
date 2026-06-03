@@ -37,7 +37,7 @@ export default async function HomePage() {
   }));
 
   return (
-    <div className="min-h-screen bg-[#EEF0E8] font-[inter-regular]">
+    <div className="min-h-screen bg-background font-[inter-regular]">
       <Navbar />
       <main className="max-w-4xl mx-auto px-4 py-8">
 
@@ -49,13 +49,13 @@ export default async function HomePage() {
         />
 
         {mapped.length === 0 ? (
-          <div className="text-center py-20 text-zinc-500">
+          <div className="text-center py-20 text-muted">
             <p className="text-4xl mb-4">🏗️</p>
-            <p className="text-lg font-[inter-medium] text-zinc-700">Nothing shipped yet this week</p>
+            <p className="text-lg font-[inter-medium] text-secondary">Nothing shipped yet this week</p>
             <p className="text-sm mt-1">Be the first builder to launch something</p>
             <Link
               href="/submit"
-              className="inline-block mt-4 bg-orange-500 hover:bg-orange-400 text-black text-sm font-[inter-medium] px-5 py-2 rounded-sm transition-colors"
+              className="inline-block mt-4 bg-purple-500 hover:bg-purple-400 text-black text-sm font-[inter-medium] px-5 py-2 rounded-sm transition-colors"
             >
               Submit your launch
             </Link>

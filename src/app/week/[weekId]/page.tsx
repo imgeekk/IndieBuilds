@@ -8,7 +8,7 @@ import { addWeeks, startOfWeek, format, parseISO } from "date-fns";
 import { notFound } from "next/navigation";
 
 export default async function WeekPage({ params }: { params: { weekId: string } }) {
-  const { weekId } = params;
+  const { weekId } = await params;
   const session = await getSession();
 
   const week = await prisma.week.findUnique({ where: { id: weekId } });
@@ -42,7 +42,7 @@ export default async function WeekPage({ params }: { params: { weekId: string } 
   }));
 
   return (
-    <div className="min-h-screen bg-zinc-950">
+    <div className="min-h-screen bg-background">
       <Navbar />
       <main className="max-w-4xl mx-auto px-4 py-8">
         <WeekHeader

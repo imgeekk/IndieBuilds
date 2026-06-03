@@ -13,12 +13,12 @@ export default function WeekHeader({ weekId, prevWeekId, nextWeekId, launchCount
   const isCurrentWeek = weekId === getCurrentWeekIdStatic();
 
   return (
-    <div className="flex items-center justify-between mb-6 text-zinc-700">
+    <div className="flex items-center justify-between mb-6 text-secondary">
       <div>
         <h2 className="text-lg font-[inter-semibold]">
           {isCurrentWeek ? "This week's launches" : `Week of ${formatWeekLabel(weekId)}`}
         </h2>
-        <p className="text-sm text-zinc-500 mt-0.5">
+        <p className="text-sm text-muted mt-0.5">
           {launchCount} {launchCount === 1 ? "builder" : "builders"} shipped
         </p>
       </div>
@@ -27,7 +27,7 @@ export default function WeekHeader({ weekId, prevWeekId, nextWeekId, launchCount
         {prevWeekId && (
           <Link
             href={`/week/${prevWeekId}`}
-            className="p-1.5 rounded-xs border border-zinc-500 text-zinc-500 hover:text-zinc-700 hover:border-zinc-600 transition-colors"
+            className="p-1.5 rounded-xs border border-card-border text-muted hover:text-foreground hover:border-zinc-500 transition-colors"
           >
             <FaChevronLeft size={16} />
           </Link>
@@ -35,7 +35,7 @@ export default function WeekHeader({ weekId, prevWeekId, nextWeekId, launchCount
         {nextWeekId && (
           <Link
             href={`/week/${nextWeekId}`}
-            className="p-1.5 rounded-xs border border-zinc-500 text-zinc-500 hover:text-zinc-700 hover:border-zinc-600 transition-colors"
+            className="p-1.5 rounded-xs border border-card-border text-muted hover:text-foreground hover:border-zinc-500 transition-colors"
           >
             <FaChevronRight size={16} />
           </Link>
