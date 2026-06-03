@@ -2,37 +2,37 @@
 
 @font-face {
   font-family: "inter-regular";
-  src: url("/fonts/Inter/Inter_18pt-Regular.ttf") format("truetype");
+  src: url("/fonts/Inter/Inter_28pt-Regular.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "inter-italic";
-  src: url("/fonts/Inter/Inter_18pt-Italic.ttf") format("truetype");
+  src: url("/fonts/Inter/Inter_28pt-Italic.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "inter-medium";
-  src: url("/fonts/Inter/Inter_18pt-Medium.ttf") format("truetype");
+  src: url("/fonts/Inter/Inter_28pt-Medium.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "inter-medium-italic";
-  src: url("/fonts/Inter/Inter_18pt-MediumItalic.ttf") format("truetype");
+  src: url("/fonts/Inter/Inter_28pt-MediumItalic.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "inter-semibold";
-  src: url("/fonts/Inter/Inter_18pt-SemiBold.ttf") format("truetype");
+  src: url("/fonts/Inter/Inter_28pt-SemiBold.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "inter-bold";
-  src: url("/fonts/Inter/Inter_18pt-Bold.ttf") format("truetype");
+  src: url("/fonts/Inter/Inter_28pt-Bold.ttf") format("truetype");
 }
 
 @font-face {
   font-family: "inter-bold-italic";
-  src: url("/fonts/Inter/Inter_18pt-BoldItalic.ttf") format("truetype");
+  src: url("/fonts/Inter/Inter_28pt-BoldItalic.ttf") format("truetype");
 }
 
 @font-face {
@@ -88,6 +88,11 @@
 @font-face {
   font-family: "monument-grotesk-mono";
   src: url("/fonts/Monument/MonumentGrotesk_Mono-s.p.3868266a.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "base";
+  src: url("/fonts/BaseNeue/BaseNeueTrial-Bold.ttf") format("truetype");
 }
 
 

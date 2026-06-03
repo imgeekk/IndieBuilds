@@ -29,3 +29,18 @@ export function formatWeekLabel(weekId: string): string {
   const { start, end } = getWeekRange(weekId);
   return `${format(start, "MMM d")} – ${format(end, "MMM d, yyyy")}`;
 }
+
+export function getLastNWeeks(n: number): string[] {
+  const weeks: string[] = [];
+  const now = new Date();
+  
+  for (let i = 0; i < n; i++) {
+    const date = new Date(now.getTime() - i * 7 * 24 * 60 * 60 * 1000);
+    const weekStart = startOfWeek(date, { weekStartsOn: 1 });
+    const year = weekStart.getFullYear();
+    const weekNum = format(weekStart, "ww");
+    weeks.unshift(`${year}-W${weekNum}`);
+  }
+  
+  return weeks;
+}
