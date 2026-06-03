@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "inter-regular";
+  src: url("/fonts/Inter/Inter_18pt-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "inter-italic";
+  src: url("/fonts/Inter/Inter_18pt-Italic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "inter-medium";
+  src: url("/fonts/Inter/Inter_18pt-Medium.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "inter-medium-italic";
+  src: url("/fonts/Inter/Inter_18pt-MediumItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "inter-semibold";
+  src: url("/fonts/Inter/Inter_18pt-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "inter-bold";
+  src: url("/fonts/Inter/Inter_18pt-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "inter-bold-italic";
+  src: url("/fonts/Inter/Inter_18pt-BoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "helvetica-regular";
+  src: url("/fonts/Helvetica/Helvetica.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "helvetica-italic";
+  src: url("/fonts/Helvetica/Helvetica-Oblique.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "helvetica-bold";
+  src: url("/fonts/Helvetica/Helvetica-Bold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "helvetica-bold-italic";
+  src: url("/fonts/Helvetica/Helvetica-BoldOblique.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "helvetica-light";
+  src: url("/fonts/Helvetica/helvetica-light-587ebe5a59211.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "helvetica-compressed";
+  src: url("/fonts/Helvetica/helvetica-compressed-5871d14b6903a.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "helvetica-rounded-bold";
+  src: url("/fonts/Helvetica/helvetica-rounded-bold-5871d05ead8de.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "instrument-serif-regular";
+  src: url("/fonts/InstrumentSerif/InstrumentSerif-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "instrument-serif-italic";
+  src: url("/fonts/InstrumentSerif/InstrumentSerif-Italic.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "monument-grotesk-regular";
+  src: url("/fonts/Monument/MonumentGrotesk_Regular-s.p.e26e8bd9.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "monument-grotesk-mono";
+  src: url("/fonts/Monument/MonumentGrotesk_Mono-s.p.3868266a.ttf") format("truetype");
+}
+
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}

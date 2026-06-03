@@ -1,0 +1,133 @@
+generator client {
+  provider = "prisma-client"
+  output = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── BetterAuth required tables ────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // custom fields required by the app
+  githubHandle  String?   @unique
+  bio           String?
+  streak        Int       @default(0)
+  lastShippedAt DateTime?
+
+  sessions      Session[]
+  accounts      Account[]
+  launches      Launch[]
+  votes         Vote[]
+  comments      Comment[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ─── App tables ──────────────────
+
+model Week {
+  id        String   @id
+  startDate DateTime
+  endDate   DateTime
+  createdAt DateTime @default(now())
+
+  launches  Launch[]
+}
+
+model Launch {
+  id          String   @id @default(cuid())
+  name        String
+  tagline     String
+  url         String
+  description String?
+  stack       String[]
+  isSoloBuilt Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  weekId      String
+  week        Week     @relation(fields: [weekId], references: [id])
+
+  votes       Vote[]
+  comments    Comment[]
+
+  // one launch per user per week
+  @@unique([userId, weekId])
+}
+
+model Vote {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  launchId  String
+  launch    Launch   @relation(fields: [launchId], references: [id], onDelete: Cascade)
+
+  // one vote per user per launch
+  @@unique([userId, launchId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  body      String
+  isRoast   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  launchId  String
+  launch    Launch   @relation(fields: [launchId], references: [id], onDelete: Cascade)
+}
