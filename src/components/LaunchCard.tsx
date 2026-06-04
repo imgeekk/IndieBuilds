@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSession, signIn } from "@/lib/auth-client";
 import { useVote } from "@/hooks/useVote";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { FaExternalLinkAlt, FaTwitter } from "react-icons/fa";
 import {FaXTwitter} from "react-icons/fa6";
 import { MdOutlineComment } from "react-icons/md";
@@ -24,6 +25,7 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
   const { toggleVote, loading } = useVote();
   const [votes, setVotes] = useState(launch._count.votes);
   const [voted, setVoted] = useState(launch.userHasVoted ?? false);
+  const router = useRouter();
 
   async function handleVote() {
     if (!session) {
@@ -38,12 +40,17 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
   }
 
   return (
-    <div className="flex gap-4 p-4 rounded-md bg-card border border-card-border hover:border-purple-500 shadow-xs transition-colors text-foreground font-[inter-regular]">
+    <div className="flex gap-4 p-4 rounded-md bg-card border border-card-border hover:border-purple-500 shadow-xs transition-colors text-foreground font-[inter-regular]"
+    onClick={(e) => {
+      e.preventDefault();
+      router.push(`/launch/${launch.id}`);
+    }}
+    >
       {/* Vote button */}
       <button
         onClick={handleVote}
         disabled={loading}
-        className={`flex flex-col items-center justify-center min-w-[52px] h-[52px] rounded-sm border text-sm cursor-pointer font-[inter-semibold] transition-colors
+        className={`flex flex-col items-center justify-center min-w-13 h-13 rounded-sm border text-sm cursor-pointer font-[inter-semibold] transition-colors
           ${
             voted
               ? "bg-purple-500/10 border-purple-500/50 text-purple-400"
@@ -85,6 +92,7 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
               {tech}
             </span>
           ))}
+          <div className="flex-1 flex items-center justify-end gap-3" >
 
           {/* Builder */}
           {session?.user.githubHandle === launch.user.githubHandle && (
@@ -102,14 +110,14 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
                 "noopener,noreferrer"
               );
             }}
-            className=" bg-purple-500 hover:bg-purple-400 text-white text-sm font-[inter-medium] px-4 py-2 rounded-xs transition-colors flex gap-1 items-center cursor-alias"
+            className=" bg-purple-500 hover:bg-purple-400 text-white text-xs font-[inter-medium] px-4 py-2 rounded-xs transition-colors flex gap-1 items-center cursor-alias"
           >
             Share your launch on <FaXTwitter size={14}  />
           </button>
         )}
           <Link
             href={`/profile/${launch.user.githubHandle ?? ""}`}
-            className="ml-auto flex items-center gap-1.5 text-sm text-foreground hover:text-secondary transition-colors"
+            className=" flex items-center gap-1.5 text-sm text-foreground hover:text-secondary transition-colors"
           >
             <img
               src={launch.user.image ?? ""}
@@ -128,7 +136,7 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
             {launch._count.comments}
           </Link>
         </div>
-        
+        </div>
       </div>
     </div>
   );
