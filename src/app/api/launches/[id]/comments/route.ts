@@ -1,26 +1,19 @@
-import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
+import { getComments, createComment } from "@/lib/services";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { id: launchId } = await params;
-  const comments = await prisma.comment.findMany({
-    where: { launchId: launchId },
-    include: {
-      user: { select: { name: true, githubHandle: true, image: true } },
-    },
-    orderBy: { createdAt: "asc" },
-  });
-
+  const comments = await getComments(launchId);
   return NextResponse.json(comments);
 }
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   const { id: launchId } = await params;
   const session = await getSession();
@@ -41,16 +34,11 @@ export async function POST(
     return NextResponse.json({ error: "Max 500 characters" }, { status: 400 });
   }
 
-  const comment = await prisma.comment.create({
-    data: {
-      body: body.trim(),
-      isRoast: isRoast ?? false,
-      userId: session.user.id,
-      launchId: launchId,
-    },
-    include: {
-      user: { select: { name: true, githubHandle: true, image: true } },
-    },
+  const comment = await createComment({
+    body: body.trim(),
+    isRoast: isRoast ?? false,
+    userId: session.user.id,
+    launchId,
   });
 
   return NextResponse.json(comment, { status: 201 });

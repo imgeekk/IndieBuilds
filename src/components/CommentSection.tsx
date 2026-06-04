@@ -1,49 +1,27 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSession, signIn } from "@/lib/auth-client";
+import { useComments } from "@/hooks/useComments";
 import Link from "next/link";
 import { formatDistanceToNow } from "date-fns";
 import { FaFire } from "react-icons/fa";
-
-type Comment = {
-  id: string;
-  body: string;
-  isRoast: boolean;
-  createdAt: string;
-  user: { name: string; githubHandle: string | null; image: string | null };
-};
+import { Loader } from "@/components/loader-4";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function CommentSection({ launchId }: { launchId: string }) {
   const { data: session } = useSession();
-  const [comments, setComments] = useState<Comment[]>([]);
+  const { comments, loading, addComment } = useComments(launchId);
   const [body, setBody] = useState("");
   const [isRoast, setIsRoast] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch(`/api/launches/${launchId}/comments`)
-      .then((r) => r.json())
-      .then((data) => {
-        setComments(data);
-        setLoading(false);
-      });
-  }, [launchId]);
 
   async function handleSubmit() {
     if (!body.trim()) return;
     setSubmitting(true);
 
-    const res = await fetch(`/api/launches/${launchId}/comments`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ body, isRoast }),
-    });
-
-    if (res.ok) {
-      const newComment = await res.json();
-      setComments((c) => [...c, newComment]);
+    const ok = await addComment(body, isRoast);
+    if (ok) {
       setBody("");
       setIsRoast(false);
     }
@@ -52,14 +30,16 @@ export default function CommentSection({ launchId }: { launchId: string }) {
 
   return (
     <div className="mt-8">
-      <h3 className="text-sm font-[inter-medium] text-muted uppercase tracking-widest mb-4">
+      <h3 className="text-sm font-[inter-semibold] text-muted uppercase mb-4">
         Discussion ({comments.length})
       </h3>
 
       {/* Comment list */}
-      <div className="flex flex-col gap-4 mb-6">
+      <div className="flex flex-col gap-4">
         {loading && (
-          <p className="text-sm text-muted">Loading comments...</p>
+          <div className="flex justify-center py-8">
+            <Loader />
+          </div>
         )}
         {!loading && comments.length === 0 && (
           <p className="text-sm text-muted">
@@ -93,7 +73,7 @@ export default function CommentSection({ launchId }: { launchId: string }) {
                     <FaFire size={11} /> roast
                   </span>
                 )}
-                <span className="text-xs text-card-border ml-auto">
+                <span className="text-[10px] text-muted ml-auto">
                   {formatDistanceToNow(new Date(c.createdAt), { addSuffix: true })}
                 </span>
               </div>
@@ -104,6 +84,8 @@ export default function CommentSection({ launchId }: { launchId: string }) {
       </div>
 
       {/* Input */}
+      <div className="sticky bottom-2 bg-background z-10 border-t border-card-border pt-4">
+        <div className="absolute bottom-full left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent pointer-events-none" />
       {session ? (
         <div className="border border-card-border rounded-md p-4 bg-card">
           <textarea
@@ -140,7 +122,7 @@ export default function CommentSection({ launchId }: { launchId: string }) {
                 disabled={submitting || !body.trim()}
                 className="bg-purple-500 hover:bg-purple-400 disabled:opacity-40 text-white text-sm font-[inter-medium] px-4 py-1.5 rounded-sm transition-colors"
               >
-                {submitting ? "Posting..." : isRoast ? "🔥 Roast it" : "Post"}
+                {submitting ? <Spinner size="sm" className="text-white" /> : isRoast ? "Roast it" : "Post"}
               </button>
             </div>
           </div>
@@ -153,6 +135,7 @@ export default function CommentSection({ launchId }: { launchId: string }) {
           Sign in with GitHub to comment
         </button>
       )}
+      </div>
     </div>
   );
 }

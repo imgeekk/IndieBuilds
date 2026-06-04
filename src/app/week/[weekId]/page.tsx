@@ -1,62 +1,67 @@
-import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
-import { formatWeekLabel } from "../../../lib/week";
+import { formatWeekLabel } from "@/lib/week";
+import { getWeekById, getWeekLaunches } from "@/lib/services";
 import Navbar from "@/components/Navbar";
 import LaunchCard from "@/components/LaunchCard";
 import WeekHeader from "@/components/WeekHeader";
-import { addWeeks, startOfWeek, format, parseISO } from "date-fns";
+import { addWeeks, startOfWeek, format } from "date-fns";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import { Loader } from "@/components/loader-4";
 
-export default async function WeekPage({ params }: { params: { weekId: string } }) {
+export default function WeekPage({ params }: { params: { weekId: string } }) {
+  return (
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <main className="max-w-4xl mx-auto px-4 py-8">
+        <Suspense
+          fallback={
+            <div className="flex justify-center py-20">
+              <Loader />
+            </div>
+          }
+        >
+          <WeekContent params={params} />
+        </Suspense>
+      </main>
+    </div>
+  );
+}
+
+async function WeekContent({ params }: { params: { weekId: string } }) {
   const { weekId } = await params;
   const session = await getSession();
 
-  const week = await prisma.week.findUnique({ where: { id: weekId } });
+  const week = await getWeekById(weekId);
   if (!week) notFound();
 
-  const launches = await prisma.launch.findMany({
-    where: { weekId },
-    include: {
-      user: { select: { name: true, githubHandle: true, image: true } },
-      _count: { select: { votes: true, comments: true } },
-      votes: session?.user
-        ? { where: { userId: session.user.id }, select: { id: true } }
-        : false,
-    },
-    orderBy: { votes: { _count: "desc" } },
-  });
+  const launches = await getWeekLaunches(weekId, session?.user?.id);
 
-  // prev / next week IDs
   const weekStart = startOfWeek(week.startDate, { weekStartsOn: 1 });
   const prev = addWeeks(weekStart, -1);
   const next = addWeeks(weekStart, 1);
   const prevWeekId = `${prev.getFullYear()}-W${format(prev, "ww")}`;
   const nextWeekId = `${next.getFullYear()}-W${format(next, "ww")}`;
-
-  // don't show "next" if it's in the future
   const isNextFuture = next > new Date();
 
   const mapped = launches.map((l) => ({
     ...l,
-    userHasVoted: session?.user ? l.votes.length > 0 : false,
+    userHasVoted: l.votes.length > 0,
   }));
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <main className="max-w-4xl mx-auto px-4 py-8">
-        <WeekHeader
-          weekId={weekId}
-          prevWeekId={prevWeekId}
-          nextWeekId={isNextFuture ? null : nextWeekId}
-          launchCount={launches.length}
-        />
-        <div className="flex flex-col gap-3">
-          {mapped.map((l) => (
-            <LaunchCard key={l.id} launch={l} />
-          ))}
-        </div>
-      </main>
-    </div>
+    <>
+      <WeekHeader
+        weekId={weekId}
+        prevWeekId={prevWeekId}
+        nextWeekId={isNextFuture ? null : nextWeekId}
+        launchCount={launches.length}
+      />
+      <div className="flex flex-col gap-3">
+        {mapped.map((l) => (
+          <LaunchCard key={l.id} launch={l} />
+        ))}
+      </div>
+    </>
   );
 }

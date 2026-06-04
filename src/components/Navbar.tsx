@@ -46,17 +46,17 @@ const Navbar = () => {
               >
                 + Submit
               </Link>
-            <div className="flex items-center gap-2 bg-card border border-card-border px-4 py-1 rounded-xs">
+            <div className="flex items-center gap-2 bg-card border border-card-border px-2 py-1 rounded-xs">
               <Link href={`/profile/${user.githubHandle ?? user.id}`}>
                 <img
                   src={user.image ?? ""}
                   alt={user.name}
-                  className="w-7 h-7 rounded-full border border-zinc-500 hover:border-zinc-500 transition-colors"
+                  className="w-7 h-7 rounded-full border-2 border-card-border hover:border-purple-500 transition-colors"
                 />
               </Link>
               <button
                 onClick={() => signOut()}
-                className="text-xs text-muted hover:text-foreground transition-colors hover:cursor-pointer"
+                className="text-sm text-muted hover:text-red-500 transition-colors hover:cursor-pointer"
               >
                 Sign out
               </button>

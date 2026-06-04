@@ -1,6 +1,6 @@
-import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/session";
-import { getCurrentWeekId } from "../../../lib/week";
+import { getCurrentWeekId } from "@/lib/week";
+import { getExistingUserLaunch, createLaunch, touchUserLastShipped } from "@/lib/services";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
@@ -18,32 +18,22 @@ export async function POST(req: NextRequest) {
 
   const weekId = getCurrentWeekId();
 
-  // check if user already launched this week
-  const existing = await prisma.launch.findUnique({
-    where: { userId_weekId: { userId: session.user.id, weekId } },
-  });
-
+  const existing = await getExistingUserLaunch(session.user.id, weekId);
   if (existing) {
     return NextResponse.json({ error: "You already submitted a launch this week." }, { status: 409 });
   }
 
-  const launch = await prisma.launch.create({
-    data: {
-      name,
-      tagline,
-      url,
-      description,
-      stack: stack ?? [],
-      userId: session.user.id,
-      weekId,
-    },
+  const launch = await createLaunch({
+    name,
+    tagline,
+    url,
+    description: description ?? undefined,
+    stack: stack ?? [],
+    userId: session.user.id,
+    weekId,
   });
 
-  // update user streak
-  await prisma.user.update({
-    where: { id: session.user.id },
-    data: { lastShippedAt: new Date() },
-  });
+  await touchUserLastShipped(session.user.id);
 
   return NextResponse.json(launch, { status: 201 });
 }

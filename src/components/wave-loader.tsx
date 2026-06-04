@@ -33,12 +33,18 @@ export interface WaveLoaderProps {
    * @default bottom
    */
   messagePlacement?: "bottom" | "left" | "right"
+  /**
+   * Tailwind background class for the bars.
+   * @default "bg-foreground"
+   */
+  color?: string
 }
 
 export function WaveLoader({
   bars = 5,
   message,
   messagePlacement,
+  color = "bg-foreground",
   className,
   ...props
 }: HTMLMotionProps<"div"> & WaveLoaderProps) {
@@ -50,7 +56,7 @@ export function WaveLoader({
           .map((_, index) => (
             <motion.div
               key={index}
-              className={cn("w-2 h-5 bg-foreground origin-bottom", className)}
+              className={cn("w-2 h-5 origin-bottom", color, className)}
               animate={{ scaleY: [1, 1.5, 1] }}
               transition={{
                 duration: 1,

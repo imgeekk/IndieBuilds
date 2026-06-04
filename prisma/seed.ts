@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../src/generated/prisma/client";
 import { startOfWeek, endOfWeek, addWeeks, format } from "date-fns";
 import { Pool } from "pg";
 import { PrismaPg } from "@prisma/adapter-pg";

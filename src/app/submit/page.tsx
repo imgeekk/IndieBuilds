@@ -4,11 +4,15 @@ import { useSession, signIn } from "@/lib/auth-client";
 import Navbar from "@/components/Navbar";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSubmitLaunch } from "@/hooks/useSubmitLaunch";
 import { FaXRay } from "react-icons/fa";
+import { Loader } from "@/components/loader-4";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function SubmitPage() {
   const { data: session, isPending } = useSession();
   const router = useRouter();
+  const { submit, submitting, error, setError } = useSubmitLaunch();
 
   const [form, setForm] = useState({
     name: "",
@@ -18,10 +22,17 @@ export default function SubmitPage() {
     stack: [] as string[],
     stackInput: "",
   });
-  const [error, setError] = useState("");
-  const [submitting, setSubmitting] = useState(false);
 
-  if (isPending) return null;
+  if (isPending) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navbar />
+        <div className="flex justify-center py-20">
+          <Loader />
+        </div>
+      </div>
+    );
+  }
 
   if (!session) {
     return (
@@ -48,31 +59,18 @@ export default function SubmitPage() {
   }
 
   async function handleSubmit() {
-    setError("");
     if (!form.name || !form.tagline || !form.url) {
       setError("Name, tagline and URL are required.");
       return;
     }
-    setSubmitting(true);
-    const res = await fetch("/api/launches", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name: form.name,
-        tagline: form.tagline,
-        url: form.url,
-        description: form.description,
-        stack: form.stack,
-      }),
+    const ok = await submit({
+      name: form.name,
+      tagline: form.tagline,
+      url: form.url,
+      description: form.description,
+      stack: form.stack,
     });
-
-    if (res.ok) {
-      router.push("/");
-    } else {
-      const data = await res.json();
-      setError(data.error ?? "Something went wrong.");
-    }
-    setSubmitting(false);
+    if (ok) router.push("/");
   }
 
   return (
@@ -148,9 +146,9 @@ export default function SubmitPage() {
           <button
             onClick={handleSubmit}
             disabled={submitting}
-            className="bg-purple-500 hover:bg-purple-400 disabled:opacity-50 text-white cursor-pointer font-[inter-medium] py-2.5 rounded-mdF transition-colors"
+            className="bg-purple-500 hover:bg-purple-400 disabled:opacity-50 text-white cursor-pointer font-[inter-medium] py-2.5 rounded-md transition-colors"
           >
-            {submitting ? "Submitting..." : "Launch it"}
+            {submitting ? <Spinner size="sm" className="text-white" /> : "Launch it"}
           </button>
 
         </div>
