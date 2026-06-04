@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useSession, signIn } from "@/lib/auth-client";
 import { useVote } from "@/hooks/useVote";
 import { useState } from "react";
-import { FaExternalLinkAlt } from "react-icons/fa";
-import CopyButton from "./CopyButton";
+import { FaExternalLinkAlt, FaTwitter } from "react-icons/fa";
+import {FaXTwitter} from "react-icons/fa6";
 import { MdOutlineComment } from "react-icons/md";
 
 type Launch = {
@@ -87,6 +87,26 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
           ))}
 
           {/* Builder */}
+          {session?.user.githubHandle === launch.user.githubHandle && (
+          <button
+            onClick={() => {
+              const text = encodeURIComponent(
+                `Check out my launch at IndieBuilds: ${launch.name} - ${launch.tagline}`
+              );
+              const url = encodeURIComponent(
+                `${process.env.NEXT_PUBLIC_APP_URL}/launch/${launch.id}`
+              );
+              window.open(
+                `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+                "_blank",
+                "noopener,noreferrer"
+              );
+            }}
+            className=" bg-purple-500 hover:bg-purple-400 text-white text-sm font-[inter-medium] px-4 py-2 rounded-xs transition-colors flex gap-1 items-center cursor-alias"
+          >
+            Share your launch on <FaXTwitter size={14}  />
+          </button>
+        )}
           <Link
             href={`/profile/${launch.user.githubHandle ?? ""}`}
             className="ml-auto flex items-center gap-1.5 text-sm text-foreground hover:text-secondary transition-colors"
@@ -108,21 +128,7 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
             {launch._count.comments}
           </Link>
         </div>
-        {/* Shareable badge — add inside LaunchPage after the stats div */}
-        {session?.user.githubHandle === launch.user.githubHandle && (
-          <div className="mt-4 p-3 bg-zinc-900 border border-zinc-800 rounded-lg">
-            <p className="text-xs text-zinc-500 mb-2">Share your launch</p>
-            <div className="flex items-center gap-2">
-              <input
-                readOnly
-              value={`${process.env.NEXT_PUBLIC_APP_URL}/launch/${launch.id}`}
-              className="flex-1 text-xs bg-zinc-800 border border-zinc-700 rounded-md px-3 py-1.5 text-zinc-300 outline-none"
-            />
-            <CopyButton
-              text={`${process.env.NEXT_PUBLIC_APP_URL}/launch/${launch.id}`}
-            />
-          </div>
-        </div>)}
+        
       </div>
     </div>
   );

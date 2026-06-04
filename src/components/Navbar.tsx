@@ -42,11 +42,11 @@ const Navbar = () => {
             <>
               <Link
                 href="/submit"
-                className="bg-purple-500 hover:bg-purple-400 text-white text-sm font-[inter-medium] px-4 py-2 rounded-xs transition-colors"
+                className="bg-purple-500 hover:bg-purple-400 text-white text-sm font-[inter-medium] px-4 py-2 rounded-sm transition-colors"
               >
                 + Submit
               </Link>
-            <div className="flex items-center gap-2 bg-card border border-card-border px-2 py-1 rounded-xs">
+            <div className="flex items-center gap-2 bg-card border border-card-border px-2 py-1 rounded-sm">
               <Link href={`/profile/${user.githubHandle ?? user.id}`}>
                 <img
                   src={user.image ?? ""}
@@ -67,7 +67,7 @@ const Navbar = () => {
               onClick={() =>
                 signIn.social({ provider: "github", callbackURL: "/" })
               }
-              className="flex items-center gap-2 bg-purple-500 hover:bg-purple-400 text-zinc-900 text-sm font-[inter-medium] px-4 py-2 rounded-xs transition-colors cursor-pointer"
+              className="flex items-center gap-2 bg-purple-500 hover:bg-purple-400 text-zinc-900 text-sm font-[inter-medium] px-4 py-2 rounded-sm transition-colors cursor-pointer"
             >
               <FaGithub size={15} />
               Sign in

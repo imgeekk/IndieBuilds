@@ -15,7 +15,7 @@ export default function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={copy}
-      className="flex items-center gap-1.5 text-xs bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-zinc-300 px-3 py-1.5 rounded-md transition-colors"
+      className="flex items-center gap-1.5 text-xs bg-purple-500 hover:bg-purple-600 border border-purple-500 text-white px-3 py-1.5 rounded-md transition-colors"
     >
       {copied ? <FaCheck size={12} className="text-green-400" /> : <FaCopy size={12} />}
       {copied ? "Copied!" : "Copy"}

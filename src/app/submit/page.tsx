@@ -5,8 +5,8 @@ import Navbar from "@/components/Navbar";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSubmitLaunch } from "@/hooks/useSubmitLaunch";
-import { FaXRay } from "react-icons/fa";
 import { Loader } from "@/components/loader-4";
+import TagInput from "@/components/TagInput";
 import { Spinner } from "@/components/ui/spinner";
 
 export default function SubmitPage() {
@@ -20,7 +20,6 @@ export default function SubmitPage() {
     url: "",
     description: "",
     stack: [] as string[],
-    stackInput: "",
   });
 
   if (isPending) {
@@ -49,13 +48,6 @@ export default function SubmitPage() {
         </div>
       </div>
     );
-  }
-
-  function addStackTag() {
-    const val = form.stackInput.trim();
-    if (val && !form.stack.includes(val) && form.stack.length < 8) {
-      setForm((f) => ({ ...f, stack: [...f.stack, val], stackInput: "" }));
-    }
   }
 
   async function handleSubmit() {
@@ -121,23 +113,11 @@ export default function SubmitPage() {
             />
           </Field>
 
-          <Field label="Stack" hint="Press Enter to add — max 8 tags">
-            <div className="flex flex-wrap gap-2">
-              {form.stack.map((t) => (
-                <span key={t} className="flex items-center gap-1 text-xs bg-card border border-card-border text-muted px-2 py-1 rounded-md">
-                  {t}
-                  <button onClick={() => setForm((f) => ({ ...f, stack: f.stack.filter((s) => s !== t) }))}>
-                  <FaXRay size={11} />
-                  </button>
-                </span>
-              ))}
-            </div>
-            <input
-              value={form.stackInput}
-              onChange={(e) => setForm((f) => ({ ...f, stackInput: e.target.value }))}
-              onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addStackTag())}
+          <Field label="Stack" hint="Press Enter or comma to add — max 8 tags">
+            <TagInput
+              stack={form.stack}
+              onChange={(tags) => setForm((f) => ({ ...f, stack: tags }))}
               placeholder="Next.js, Postgres, Vercel..."
-              className="p-1 outline-offset-1 focus:outline-1 outline-purple-500"
             />
           </Field>
 
