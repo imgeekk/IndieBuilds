@@ -61,15 +61,15 @@ const StyledWrapper = styled.div`
     animation-delay: 200ms;
   }
 
-  .cell:nth-child(1) { --cell-color: #6d28d9; }
-  .cell:nth-child(2) { --cell-color: #7c3aed; }
-  .cell:nth-child(3) { --cell-color: #8b5cf6; }
-  .cell:nth-child(4) { --cell-color: #8b5cf6; }
-  .cell:nth-child(5) { --cell-color: #a78bfa; }
-  .cell:nth-child(6) { --cell-color: #a78bfa; }
-  .cell:nth-child(7) { --cell-color: #c4b5fd; }
-  .cell:nth-child(8) { --cell-color: #c4b5fd; }
-  .cell:nth-child(9) { --cell-color: #ddd6fe; }
+  .cell:nth-child(1) { --cell-color: #581c87; }
+  .cell:nth-child(2) { --cell-color: #6b21a8; }
+  .cell:nth-child(3) { --cell-color: #7e22ce; }
+  .cell:nth-child(4) { --cell-color: #9333ea; }
+  .cell:nth-child(5) { --cell-color: #a855f7; }
+  .cell:nth-child(6) { --cell-color: #c084fc; }
+  .cell:nth-child(7) { --cell-color: #d8b4fe; }
+  .cell:nth-child(8) { --cell-color: #e9d5ff; }
+  .cell:nth-child(9) { --cell-color: #f3e8ff; }
 
   @keyframes ripple {
     0% {
