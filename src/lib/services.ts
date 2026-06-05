@@ -80,6 +80,7 @@ export function createLaunch(data: {
   tagline: string;
   url: string;
   description?: string;
+  ogImage?: string;
   stack: string[];
   userId: string;
   weekId: string;

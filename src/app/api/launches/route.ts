@@ -2,6 +2,7 @@ import { getSession } from "@/lib/session";
 import { getCurrentWeekId } from "@/lib/week";
 import { getExistingUserLaunch, createLaunch, touchUserLastShipped } from "@/lib/services";
 import { NextRequest, NextResponse } from "next/server";
+import { FetchOgImage } from "@/lib/fetchOg";
 
 export async function POST(req: NextRequest) {
   const session = await getSession();
@@ -23,11 +24,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "You already submitted a launch this week." }, { status: 409 });
   }
 
+  const ogImage = await FetchOgImage(url);
+
   const launch = await createLaunch({
     name,
     tagline,
     url,
     description: description ?? undefined,
+    ogImage: ogImage ?? undefined,
     stack: stack ?? [],
     userId: session.user.id,
     weekId,

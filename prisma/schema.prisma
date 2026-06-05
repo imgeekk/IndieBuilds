@@ -78,6 +78,7 @@ model Launch {
   tagline     String
   url         String
   description String?
+  ogImage     String?
   stack       String[]
   isSoloBuilt Boolean   @default(true)
   createdAt   DateTime  @default(now())

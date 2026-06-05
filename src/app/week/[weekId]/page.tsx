@@ -57,7 +57,7 @@ async function WeekContent({ params }: { params: { weekId: string } }) {
         nextWeekId={isNextFuture ? null : nextWeekId}
         launchCount={launches.length}
       />
-      <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {mapped.map((l) => (
           <LaunchCard key={l.id} launch={l} />
         ))}

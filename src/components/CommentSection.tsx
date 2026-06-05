@@ -84,7 +84,7 @@ export default function CommentSection({ launchId }: { launchId: string }) {
       </div>
 
       {/* Input */}
-      <div className="sticky bottom-2 bg-background z-10 border-t border-card-border pt-4">
+      <div className="sticky bottom-0 bg-background z-10 border-t border-card-border pt-4 pb-2 relative">
         <div className="absolute bottom-full left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent pointer-events-none" />
       {session ? (
         <div className="border border-card-border rounded-md p-4 bg-card">

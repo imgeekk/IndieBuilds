@@ -101,7 +101,7 @@ async function ProfileContent({
       <h2 className="text-sm font-[inter-medium] text-muted uppercase tracking-widest mb-4">
         All launches
       </h2>
-      <div className="flex flex-col gap-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {mapped.map((l) => (
           <LaunchCard key={l.id} launch={l} />
         ))}
