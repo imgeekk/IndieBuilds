@@ -55,14 +55,13 @@ export default function SubmitPage() {
       setError("Name, tagline and URL are required.");
       return;
     }
-    const ok = await submit({
+    submit({
       name: form.name,
       tagline: form.tagline,
       url: form.url,
       description: form.description,
       stack: form.stack,
     });
-    if (ok) router.push("/");
   }
 
   return (

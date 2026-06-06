@@ -1,8 +1,9 @@
 import { getSession } from "@/lib/session";
 import { getCurrentWeekId } from "@/lib/week";
-import { getExistingUserLaunch, createLaunch, touchUserLastShipped } from "@/lib/services";
+import { getExistingUserLaunch, createLaunch, touchUserLastShipped, getWeekLaunches } from "@/lib/services";
 import { NextRequest, NextResponse } from "next/server";
 import { FetchOgImage } from "@/lib/fetchOg";
+import { json } from "stream/consumers";
 
 export async function POST(req: NextRequest) {
   const session = await getSession();
@@ -40,4 +41,21 @@ export async function POST(req: NextRequest) {
   await touchUserLastShipped(session.user.id);
 
   return NextResponse.json(launch, { status: 201 });
+}
+
+export async function GET(req: NextRequest) {
+ const weekId = req.nextUrl.searchParams.get("weekId") || getCurrentWeekId();
+
+ if(!weekId) {
+  return NextResponse.json({ error: "weekId is required" }, { status: 400 });
+ }
+
+ const session = await getSession();
+ const launches = await getWeekLaunches(weekId, session?.user.id);
+
+ const mapped = launches.map((l) => ({
+  ...l,
+  userHasVoted: l.votes.length > 0,
+ }))
+ return NextResponse.json(mapped); 
 }

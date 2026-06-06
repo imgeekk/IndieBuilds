@@ -11,21 +11,16 @@ import { Spinner } from "@/components/ui/spinner";
 
 export default function CommentSection({ launchId }: { launchId: string }) {
   const { data: session } = useSession();
-  const { comments, loading, addComment } = useComments(launchId);
+  const { comments, loading, addComment, submitting } = useComments(launchId);
   const [body, setBody] = useState("");
   const [isRoast, setIsRoast] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
 
   async function handleSubmit() {
     if (!body.trim()) return;
-    setSubmitting(true);
 
-    const ok = await addComment(body, isRoast);
-    if (ok) {
+    await addComment({body, isRoast});
       setBody("");
       setIsRoast(false);
-    }
-    setSubmitting(false);
   }
 
   return (
@@ -84,8 +79,8 @@ export default function CommentSection({ launchId }: { launchId: string }) {
       </div>
 
       {/* Input */}
-      <div className="sticky bottom-0 bg-background z-10 border-t border-card-border pt-4 pb-2 relative">
-        <div className="absolute bottom-full left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+      <div className="sticky bottom-0 bg-background z-10 border-t border-card-border pt-4 pb-2">
+        <div className="absolute bottom-full left-0 right-0 h-6 bg-linear-to-t from-background to-transparent pointer-events-none" />
       {session ? (
         <div className="border border-card-border rounded-md p-4 bg-card">
           <textarea

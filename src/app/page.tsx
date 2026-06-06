@@ -8,6 +8,7 @@ import Link from "next/link";
 import { addWeeks, startOfWeek, format } from "date-fns";
 import { Suspense } from "react";
 import { Loader } from "@/components/loader-4";
+import HomeClient from "@/components/HomeClient";
 
 export const revalidate = 60;
 
@@ -47,33 +48,10 @@ async function HomeContent() {
   }));
 
   return (
-    <>
-      <WeekHeader
-        weekId={weekId}
-        prevWeekId={prevWeekId}
-        nextWeekId={null}
-        launchCount={launches.length}
-      />
-
-      {mapped.length === 0 ? (
-        <div className="text-center py-20 text-muted">
-          <p className="text-4xl mb-4">🏗️</p>
-          <p className="text-lg font-[inter-medium] text-secondary">Nothing shipped yet this week</p>
-          <p className="text-sm mt-1">Be the first builder to launch something</p>
-          <Link
-            href="/submit"
-            className="inline-block mt-4 bg-purple-500 hover:bg-purple-400 text-black text-sm font-[inter-medium] px-5 py-2 rounded-sm transition-colors"
-          >
-            Submit your launch
-          </Link>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {mapped.map((launch) => (
-            <LaunchCard key={launch.id} launch={launch} />
-          ))}
-        </div>
-      )}
-    </>
+    <HomeClient
+      weekId={weekId}
+      prevWeekId={prevWeekId}
+      initialLaunches={mapped}
+    />
   );
 }

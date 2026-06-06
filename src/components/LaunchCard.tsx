@@ -23,9 +23,7 @@ type Launch = {
 
 export default function LaunchCard({ launch }: { launch: Launch }) {
   const { data: session } = useSession();
-  const { toggleVote, loading } = useVote();
-  const [votes, setVotes] = useState(launch._count.votes);
-  const [voted, setVoted] = useState(launch.userHasVoted ?? false);
+  const { toggleVote } = useVote();
   const router = useRouter();
 
   async function handleVote() {
@@ -33,11 +31,8 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
       signIn.social({ provider: "github", callbackURL: "/" });
       return;
     }
-    const result = await toggleVote(launch.id);
-    if (result) {
-      setVoted(result.voted);
-      setVotes((v) => (result.voted ? v + 1 : v - 1));
-    }
+    toggleVote(launch.id);
+    
   }
 
   return (
@@ -49,7 +44,7 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
       }}
     >
       {/* OG Image Banner */}
-      <div className="relative w-full aspect-video flex-shrink-0 bg-card-border">
+      <div className="relative w-full aspect-video shrink-0 bg-card-border">
         {launch.ogImage ? (
           <img
             src={launch.ogImage}
@@ -68,15 +63,14 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
           {/* Vote button */}
           <button
             onClick={handleVote}
-            disabled={loading}
             className={`flex flex-col items-center justify-center min-w-13 h-13 rounded-sm border text-sm cursor-pointer font-[inter-semibold] transition-colors ${
-              voted
+              launch.userHasVoted
                 ? "bg-purple-500/10 border-purple-500/50 text-purple-400"
                 : "bg-card border-card-border text-muted hover:border-zinc-500 hover:text-foreground"
             }`}
           >
             <span className="text-xs">▲</span>
-            <span>{votes}</span>
+            <span>{launch._count.votes}</span>
           </button>
 
           <div className="flex-1 h-full min-w-0 flex flex-col justify-between">

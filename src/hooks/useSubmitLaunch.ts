@@ -1,42 +1,47 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { queryKeys } from "@/lib/queryKeys";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export function useSubmitLaunch() {
-  const [submitting, setSubmitting] = useState(false);
+  const queryClient = useQueryClient();
   const [error, setError] = useState("");
+  const router = useRouter();
 
-  const submit = useCallback(async (data: {
-    name: string;
-    tagline: string;
-    url: string;
-    description?: string;
-    stack: string[];
-  }) => {
-    setError("");
-    setSubmitting(true);
-
-    try {
+  const submit = useMutation({
+    mutationFn: async (data: {
+      name: string;
+      tagline: string;
+      url: string;
+      description?: string;
+      stack: string[];
+    }) => {
       const res = await fetch("/api/launches", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
-      if (res.ok) {
-        return true;
-      } else {
+      if (!res.ok) {
         const body = await res.json();
-        setError(body.error ?? "Something went wrong.");
-        return false;
+        throw new Error(body.error ?? "Something went wrong.");
       }
-    } catch {
-      setError("Something went wrong.");
-      return false;
-    } finally {
-      setSubmitting(false);
-    }
-  }, []);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.launches.all });
+      router.push("/");
+    },
+    onError: (err: any) => {
+      setError(err.message || "Something went wrong.");
+    },
+  });
 
-  return { submit, submitting, error, setError };
+  return {
+    submit: submit.mutate,
+    submitting: submit.isPending,
+    error: submit.error?.message,
+    setError,
+  };
 }
