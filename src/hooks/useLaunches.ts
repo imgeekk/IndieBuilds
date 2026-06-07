@@ -17,7 +17,7 @@ type Launch = {
 
 export function useLaunches(weekId: string, initialData?: Launch[] ) {
   const { data: launches, isLoading, error } = useQuery({
-    queryKey: queryKeys.launches.byWeek(weekId),
+    queryKey: queryKeys.launches(weekId),
     queryFn: async () => {
       const res = await fetch(`/api/launches?weekId=${weekId}`);
       if (!res.ok) {

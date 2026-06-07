@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
 
 export function useVote() {
@@ -18,11 +17,9 @@ export function useVote() {
       return res.json() as Promise<{ voted: boolean }>;
     },
     onMutate: async (launchId: string) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.launches.all });
+      await queryClient.cancelQueries({ queryKey: queryKeys.launches() });
 
-      const previousLaunches = queryClient.getQueriesData({queryKey: queryKeys.launches.all});
-
-      queryClient.setQueriesData({queryKey: queryKeys.launches.all}, (old: any) => {
+      queryClient.setQueriesData({ queryKey: queryKeys.launches() }, (old: any) => {
         if (!old) return old;
 
         return old.map((launch: any) => {
@@ -42,15 +39,12 @@ export function useVote() {
           return launch;
         });
       });
-      return { previousLaunches };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.launches.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.launches() });
     },
-    onError: (err, launchId, context) => {
-      if (context?.previousLaunches) {
-        queryClient.setQueriesData({ queryKey: queryKeys.launches.all }, context.previousLaunches);
-      }
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.launches() });
     },
   });
 

@@ -30,7 +30,7 @@ export function useSubmitLaunch() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.launches.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.launches() });
       router.push("/");
     },
     onError: (err: any) => {

@@ -14,7 +14,7 @@ export type Comment = {
 export function useComments(launchId: string) {
 
   const {data: comments, isLoading: loading, error} = useQuery({
-    queryKey: queryKeys.comments.byLaunch(launchId),
+    queryKey: queryKeys.comments(launchId),
     queryFn: async () => {
       const res = await fetch(`/api/launches/${launchId}/comments`);
       if (!res.ok) {
@@ -39,11 +39,11 @@ export function useComments(launchId: string) {
       return res.json() as Promise<Comment>;
     },
     onMutate: async (newComment) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.comments.byLaunch(launchId) });
+      await queryClient.cancelQueries({ queryKey: queryKeys.comments(launchId) });
 
-      const previousComments = queryClient.getQueryData(queryKeys.comments.byLaunch(launchId));
+      const previousComments = queryClient.getQueryData(queryKeys.comments(launchId));
 
-      queryClient.setQueryData(queryKeys.comments.byLaunch(launchId), (old: any) => {
+      queryClient.setQueryData(queryKeys.comments(launchId), (old: any) => {
         if (!old) return old;
         return [ { ...newComment, id: "temp-id", createdAt: new Date().toISOString(), user: { name: "You", githubHandle: null, image: null } }, ...old ];
       });
@@ -51,16 +51,16 @@ export function useComments(launchId: string) {
       return { previousComments };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.comments.byLaunch(launchId) });
+      queryClient.invalidateQueries({ queryKey: queryKeys.comments(launchId) });
     },
     onError: (err, newComment, context) => {
       if (context?.previousComments) {
-        queryClient.setQueryData(queryKeys.comments.byLaunch(launchId), context.previousComments);
+        queryClient.setQueryData(queryKeys.comments(launchId), context.previousComments);
       }
     },
   })
 
 
 
-  return { comments, loading, error, addComment: addComment.mutateAsync, submitting: addComment.isPending };
+  return { comments: comments || [], loading, error, addComment: addComment.mutateAsync, submitting: addComment.isPending };
 }
