@@ -3,7 +3,6 @@
 import { useSession, signIn } from "@/lib/auth-client";
 import Navbar from "@/components/Navbar";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useSubmitLaunch } from "@/hooks/useSubmitLaunch";
 import { Loader } from "@/components/loader-4";
 import TagInput from "@/components/TagInput";
@@ -11,7 +10,6 @@ import { Spinner } from "@/components/ui/spinner";
 
 export default function SubmitPage() {
   const { data: session, isPending } = useSession();
-  const router = useRouter();
   const { submit, submitting, error, setError } = useSubmitLaunch();
 
   const [form, setForm] = useState({
