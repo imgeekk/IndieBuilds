@@ -18,7 +18,7 @@ export default function CommentSection({ launchId }: { launchId: string }) {
   async function handleSubmit() {
     if (!body.trim()) return;
 
-    await addComment({body, isRoast});
+  await addComment({body, isRoast});
       setBody("");
       setIsRoast(false);
   }
@@ -54,6 +54,7 @@ export default function CommentSection({ launchId }: { launchId: string }) {
               src={c.user.image ?? ""}
               alt={c.user.name}
               className="w-7 h-7 rounded-full shrink-0 mt-0.5"
+              loading="lazy"
             />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1">

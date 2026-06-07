@@ -121,6 +121,7 @@ async function LaunchContent({ params }: { params: { id: string } }) {
               src={launch.user.image ?? ""}
               alt={launch.user.name}
               className="w-6 h-6 rounded-full"
+              loading="lazy"
             />
             {launch.user.githubHandle ?? launch.user.name}
           </Link>

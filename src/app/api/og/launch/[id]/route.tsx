@@ -125,6 +125,7 @@ export async function GET(
         <img
           src={loginBgBase64}
           style={{ width: "400px", height: "400px", borderRadius: "10px", objectFit: "cover" }}
+          loading="lazy"
         />
       </div>
 
@@ -146,6 +147,7 @@ export async function GET(
               width={60}
               height={60}
               style={{ borderRadius: "50%" }}
+              loading="lazy"
             />
           ) : (
             <div
