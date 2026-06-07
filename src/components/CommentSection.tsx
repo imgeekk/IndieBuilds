@@ -116,7 +116,7 @@ export default function CommentSection({ launchId }: { launchId: string }) {
               <button
                 onClick={handleSubmit}
                 disabled={submitting || !body.trim()}
-                className="bg-purple-500 hover:bg-purple-400 disabled:opacity-40 text-white text-sm font-[inter-medium] px-4 py-1.5 rounded-sm transition-colors"
+                className="bg-purple-500 hover:bg-purple-400 disabled:opacity-40 text-white text-sm font-[inter-medium] px-4 py-1.5 rounded-sm transition-colors inline-flex items-center justify-center min-w-[80px]"
               >
                 {submitting ? <Spinner size="sm" className="text-white" /> : isRoast ? "Roast it" : "Post"}
               </button>
