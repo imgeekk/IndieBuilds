@@ -3,7 +3,6 @@ import { getCurrentWeekId } from "@/lib/week";
 import { getExistingUserLaunch, createLaunch, touchUserLastShipped, getWeekLaunches } from "@/lib/services";
 import { NextRequest, NextResponse } from "next/server";
 import { FetchOgImage } from "@/lib/fetchOg";
-import { json } from "stream/consumers";
 
 export async function POST(req: NextRequest) {
   const session = await getSession();
