@@ -2,20 +2,32 @@
 
 import Link from "next/link";
 import { useSession, signIn, signOut } from "@/lib/auth-client";
-import { FaGithub, FaSun, FaMoon } from "react-icons/fa";
+import { FaGithub, FaBars } from "react-icons/fa";
 import { IoMoonOutline } from "react-icons/io5";
 
-import { MdOutlineWbSunny, MdOutlineWbIncandescent} from "react-icons/md";
+import { MdOutlineWbSunny } from "react-icons/md";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const Navbar = () => {
   const { data: session } = useSession();
   const user = session?.user;
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => setMounted(true), []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <nav className="border-b border-card-border sticky top-0 z-50 text-foreground bg-background">
@@ -46,12 +58,13 @@ const Navbar = () => {
               >
                 + Submit
               </Link>
-            <div className="flex items-center gap-2 bg-card border border-card-border px-2 py-1 rounded-sm">
+            <div className="hidden md:flex items-center gap-2 bg-card border border-card-border px-2 py-1 rounded-sm">
               <Link href={`/profile/${user.githubHandle ?? user.id}`}>
                 <img
                   src={user.image ?? ""}
                   alt={user.name}
                   className="w-7 h-7 rounded-full border-2 border-card-border hover:border-purple-500 transition-colors"
+                  loading="lazy"
                 />
               </Link>
               <button
@@ -61,6 +74,38 @@ const Navbar = () => {
                 Sign out
               </button>
               </div>
+
+            <div className="flex md:hidden relative" ref={menuRef}>
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="text-muted hover:text-foreground transition-colors cursor-pointer p-2"
+                aria-label="Menu"
+              >
+                <FaBars size={18} />
+              </button>
+              {isMenuOpen && (
+                <div className="absolute right-0 top-full mt-2 bg-card border border-card-border rounded-sm shadow-lg min-w-40 z-50 p-1">
+                  <Link
+                    href={`/profile/${user.githubHandle ?? user.id}`}
+                    className="flex items-center gap-2 px-3 py-2 rounded-sm text-sm text-foreground hover:bg-card-border/20 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <img
+                      src={user.image ?? ""}
+                      alt={user.name}
+                      className="w-7 h-7 rounded-full"
+                    />
+                    {user.name}
+                  </Link>
+                  <button
+                    onClick={() => { signOut(); setIsMenuOpen(false); }}
+                    className="w-full text-left px-3 py-2 rounded-sm text-sm text-muted hover:text-red-500 hover:bg-card-border/20 transition-colors cursor-pointer"
+                  >
+                    Sign out
+                  </button>
+                </div>
+              )}
+            </div>
             </>
           ) : (
             <button
