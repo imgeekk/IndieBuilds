@@ -7,10 +7,12 @@ export default function HomeClient({
   weekId,
   prevWeekId,
   initialLaunches,
+  currentUserGithubHandle,
 }: {
   weekId: string;
   prevWeekId: string | null;
   initialLaunches: any[];
+  currentUserGithubHandle: string | null;
 }) {
   const { launches = initialLaunches } = useLaunches(weekId, initialLaunches);
   return (
@@ -36,7 +38,7 @@ export default function HomeClient({
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {launches.map((launch: any) => (
-            <LaunchCard key={launch.id} launch={launch} />
+            <LaunchCard key={launch.id} launch={launch} currentUserGithubHandle={currentUserGithubHandle} />
           ))}
         </div>
       )}

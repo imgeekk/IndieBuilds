@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useSession, signIn } from "@/lib/auth-client";
+import { signIn } from "@/lib/auth-client";
 import { useVote } from "@/hooks/useVote";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { FaExternalLinkAlt, FaImage } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
@@ -21,13 +20,12 @@ type Launch = {
   userHasVoted?: boolean;
 };
 
-export default function LaunchCard({ launch }: { launch: Launch }) {
-  const { data: session } = useSession();
+export default function LaunchCard({ launch, currentUserGithubHandle }: { launch: Launch; currentUserGithubHandle: string | null }) {
   const { toggleVote } = useVote();
   const router = useRouter();
 
   async function handleVote() {
-    if (!session) {
+    if (!currentUserGithubHandle) {
       signIn.social({ provider: "github", callbackURL: "/" });
       return;
     }
@@ -50,6 +48,7 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
             src={launch.ogImage}
             alt={launch.name}
             className="w-full h-full object-cover"
+            loading="lazy"
           />
         ) : (
           <div className="flex items-center justify-center w-full h-full text-muted/30">
@@ -104,7 +103,7 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
             </section>
             <div className="mt-auto pt-3 flex items-center gap-3 flex-wrap">
                 {/* Builder share — left side */}
-                {session?.user.githubHandle === launch.user.githubHandle && (
+                {currentUserGithubHandle === launch.user.githubHandle && (
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -135,6 +134,7 @@ export default function LaunchCard({ launch }: { launch: Launch }) {
                       src={launch.user.image ?? ""}
                       alt={launch.user.name}
                       className="w-6 h-6 rounded-full"
+                      loading="lazy"
                     />
                     {launch.user.githubHandle ?? launch.user.name}
                   </Link>

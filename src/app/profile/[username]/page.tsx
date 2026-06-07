@@ -62,6 +62,7 @@ async function ProfileContent({
           src={user.image ?? ""}
           alt={user.name}
           className="w-16 h-16 rounded-full border-2 border-card-border"
+          loading="lazy"
         />
         <div>
           <h1 className="text-xl font-[inter-semibold] text-foreground">{user.name}</h1>
@@ -103,7 +104,7 @@ async function ProfileContent({
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {mapped.map((l) => (
-          <LaunchCard key={l.id} launch={l} />
+          <LaunchCard key={l.id} launch={l} currentUserGithubHandle={session?.user.githubHandle || null}/>
         ))}
       </div>
     </>

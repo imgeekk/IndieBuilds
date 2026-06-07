@@ -1,5 +1,4 @@
 import { getSession } from "@/lib/session";
-import { formatWeekLabel } from "@/lib/week";
 import { getWeekById, getWeekLaunches } from "@/lib/services";
 import Navbar from "@/components/Navbar";
 import LaunchCard from "@/components/LaunchCard";
@@ -59,7 +58,7 @@ async function WeekContent({ params }: { params: { weekId: string } }) {
       />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {mapped.map((l) => (
-          <LaunchCard key={l.id} launch={l} />
+          <LaunchCard key={l.id} launch={l} currentUserGithubHandle={session?.user.githubHandle || null}/>
         ))}
       </div>
     </>

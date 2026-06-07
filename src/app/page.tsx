@@ -2,9 +2,6 @@ import { getSession } from "@/lib/session";
 import { getCurrentWeekId } from "@/lib/week";
 import { getWeekLaunches } from "@/lib/services";
 import Navbar from "@/components/Navbar";
-import LaunchCard from "@/components/LaunchCard";
-import WeekHeader from "@/components/WeekHeader";
-import Link from "next/link";
 import { addWeeks, startOfWeek, format } from "date-fns";
 import { Suspense } from "react";
 import { Loader } from "@/components/loader-4";
@@ -52,6 +49,7 @@ async function HomeContent() {
       weekId={weekId}
       prevWeekId={prevWeekId}
       initialLaunches={mapped}
+      currentUserGithubHandle={session?.user?.githubHandle || null}
     />
   );
 }
