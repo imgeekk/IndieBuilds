@@ -8,6 +8,7 @@ import { FaExternalLinkAlt, FaImage } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { MdOutlineComment } from "react-icons/md";
 import { ApiLaunch } from "@/lib/types";
+import * as Tooltip from "@radix-ui/react-tooltip";
 
 export default function LaunchCard({
   launch,
@@ -36,16 +37,16 @@ export default function LaunchCard({
       }}
     >
       {/* OG Image Banner */}
-      <div className="relative w-full aspect-video shrink-0 bg-card-border">
+      <div className="relative w-full aspect-video shrink-0 p-2">
         {launch.ogImage ? (
           <img
             src={launch.ogImage}
             alt={launch.name}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-sm"
             loading="lazy"
           />
         ) : (
-          <div className="flex items-center justify-center w-full h-full text-muted/30">
+          <div className="flex items-center justify-center w-full h-full text-muted/30 bg-card-border rounded-sm">
             <FaImage size={32} />
           </div>
         )}
@@ -54,17 +55,37 @@ export default function LaunchCard({
       <div className="p-4 flex-1">
         <div className="h-full flex items-start gap-3">
           {/* Vote button */}
-          <button
-            onClick={handleVote}
-            className={`flex flex-col items-center justify-center min-w-13 h-13 rounded-sm border text-sm cursor-pointer font-[inter-semibold] transition-colors ${
-              launch.userHasVoted
-                ? "bg-purple-500/10 border-purple-500/50 text-purple-400"
-                : "bg-card border-card-border text-muted hover:border-zinc-500 hover:text-foreground"
-            }`}
-          >
-            <span className="text-xs">▲</span>
-            <span>{launch._count.votes}</span>
-          </button>
+          <Tooltip.Root>
+            <Tooltip.Trigger asChild>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleVote();
+                }}
+                disabled={!currentUserGithubHandle}
+                className={`flex flex-col items-center justify-center min-w-13 h-13 rounded-sm border text-sm font-[inter-semibold] transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${
+                  launch.userHasVoted
+                    ? "bg-purple-500/10 border-purple-500/50 text-purple-400"
+                    : "bg-card border-card-border text-muted hover:border-zinc-500 hover:text-foreground"
+                }`}
+              >
+                <span className="text-xs">▲</span>
+                <span>{launch._count.votes}</span>
+              </button>
+            </Tooltip.Trigger>
+            {!currentUserGithubHandle && (
+              <Tooltip.Portal>
+                <Tooltip.Content
+                  side="top"
+                  sideOffset={8}
+                  className="px-2 py-1 bg-card text-muted text-[12px] rounded-xs whitespace-nowrap pointer-events-none shadow-lg border border-card-border font-[inter-medium] z-50"
+                >
+                  Sign in to vote
+                  <Tooltip.Arrow className="fill-card" />
+                </Tooltip.Content>
+              </Tooltip.Portal>
+            )}
+          </Tooltip.Root>
 
           <div className="flex-1 h-full min-w-0 flex flex-col justify-between">
             <section className="">

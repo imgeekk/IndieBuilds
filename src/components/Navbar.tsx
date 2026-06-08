@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useSession, signIn, signOut } from "@/lib/auth-client";
+import { useQueryClient } from "@tanstack/react-query";
+import { queryKeys } from "@/lib/queryKeys";
 import { FaGithub, FaBars } from "react-icons/fa";
 import { IoMoonOutline } from "react-icons/io5";
 
@@ -16,6 +18,7 @@ const Navbar = () => {
   const [mounted, setMounted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
 
   useEffect(() => setMounted(true), []);
 
@@ -68,7 +71,7 @@ const Navbar = () => {
                 />
               </Link>
               <button
-                onClick={() => signOut()}
+                onClick={() => { signOut(); queryClient.invalidateQueries({ queryKey: queryKeys.launches() }); }}
                 className="text-sm text-muted hover:text-red-500 transition-colors hover:cursor-pointer"
               >
                 Sign out
@@ -98,7 +101,7 @@ const Navbar = () => {
                     {user.name}
                   </Link>
                   <button
-                    onClick={() => { signOut(); setIsMenuOpen(false); }}
+                    onClick={() => { signOut(); queryClient.invalidateQueries({ queryKey: queryKeys.launches() }); setIsMenuOpen(false); }}
                     className="w-full text-left px-3 py-2 rounded-sm text-sm text-muted hover:text-red-500 hover:bg-card-border/20 transition-colors cursor-pointer"
                   >
                     Sign out

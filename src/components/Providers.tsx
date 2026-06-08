@@ -3,6 +3,7 @@
 import { ThemeProvider } from "next-themes";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import { useState } from "react";
+import * as Tooltip from "@radix-ui/react-tooltip";
 
 
 export default function Providers({ children }: { children: React.ReactNode }) {
@@ -19,7 +20,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
-        {children}
+        <Tooltip.Provider delayDuration={0}>
+          {children}
+        </Tooltip.Provider>
       </ThemeProvider>
     </QueryClientProvider>
   );
