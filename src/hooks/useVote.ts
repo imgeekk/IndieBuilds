@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/lib/queryKeys";
 
-export function useVote() {
+export function useVote(weekId: string) {
   const queryClient = useQueryClient();
 
   const toggleVote = useMutation({
@@ -17,9 +17,9 @@ export function useVote() {
       return res.json() as Promise<{ voted: boolean }>;
     },
     onMutate: async (launchId: string) => {
-      await queryClient.cancelQueries({ queryKey: queryKeys.launches() });
+      await queryClient.cancelQueries({ queryKey: queryKeys.launches(weekId) });
 
-      queryClient.setQueriesData({ queryKey: queryKeys.launches() }, (old: any) => {
+      queryClient.setQueriesData({ queryKey: queryKeys.launches(weekId) }, (old: any) => {
         if (!old) return old;
 
         return old.map((launch: any) => {
@@ -41,10 +41,10 @@ export function useVote() {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.launches() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.launches(weekId) });
     },
     onError: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.launches() });
+      queryClient.invalidateQueries({ queryKey: queryKeys.launches(weekId) });
     },
   });
 

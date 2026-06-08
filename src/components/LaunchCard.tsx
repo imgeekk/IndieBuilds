@@ -16,7 +16,7 @@ export default function LaunchCard({
   launch: ApiLaunch;
   currentUserGithubHandle: string | null;
 }) {
-  const { toggleVote } = useVote();
+  const { toggleVote } = useVote(launch.weekId);
   const router = useRouter();
 
   async function handleVote() {
