@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar";
 import { addWeeks, startOfWeek, format } from "date-fns";
 import { Suspense } from "react";
 import { Loader } from "@/components/loader-4";
-import HomeClient from "@/components/HomeClient";
+import LaunchesClient from "@/components/LaunchesClient";
 
 export const revalidate = 60;
 
@@ -40,11 +40,13 @@ async function HomeContent() {
   const prevWeekId = `${lastMonday.getFullYear()}-W${format(lastMonday, "ww")}`;
 
   return (
-    <HomeClient
+    <LaunchesClient
       weekId={weekId}
       prevWeekId={prevWeekId}
+      nextWeekId={null} // Obv there is no next week dude cuz this is the current week page
       initialLaunches={launches}
       currentUserGithubHandle={session?.user?.githubHandle || null}
+      isCurrentWeek={true}
     />
   );
 }

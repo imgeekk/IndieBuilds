@@ -1,12 +1,12 @@
 import { getSession } from "@/lib/session";
 import { getWeekById, getWeekLaunches } from "@/lib/services";
 import Navbar from "@/components/Navbar";
-import LaunchCard from "@/components/LaunchCard";
-import WeekHeader from "@/components/WeekHeader";
 import { addWeeks, startOfWeek, format } from "date-fns";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Loader } from "@/components/loader-4";
+import { getCurrentWeekId } from "@/lib/week";
+import LaunchesClient from "@/components/LaunchesClient";
 
 export default function WeekPage({ params }: { params: { weekId: string } }) {
   return (
@@ -43,23 +43,16 @@ async function WeekContent({ params }: { params: { weekId: string } }) {
   const nextWeekId = `${next.getFullYear()}-W${format(next, "ww")}`;
   const isNextFuture = next > new Date();
 
+  const currentWeekId = getCurrentWeekId();
+  const isCurrentWeek = weekId === currentWeekId;
   return (
-    <>
-      <WeekHeader
-        weekId={weekId}
-        prevWeekId={prevWeekId}
-        nextWeekId={isNextFuture ? null : nextWeekId}
-        launchCount={launches.length}
-      />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {launches.map((l) => (
-          <LaunchCard
-            key={l.id}
-            launch={l}
-            currentUserGithubHandle={session?.user.githubHandle || null}
-          />
-        ))}
-      </div>
-    </>
+    <LaunchesClient
+    weekId={weekId}
+    prevWeekId={prevWeekId}
+    nextWeekId={isNextFuture ? null : nextWeekId}
+    initialLaunches={launches}
+    currentUserGithubHandle={session?.user?.githubHandle || null}
+    isCurrentWeek={isCurrentWeek}
+    />
   );
 }
