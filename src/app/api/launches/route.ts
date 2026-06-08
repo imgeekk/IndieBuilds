@@ -8,6 +8,7 @@ import {
 } from "@/lib/services";
 import { NextRequest, NextResponse } from "next/server";
 import { FetchOgImage } from "@/lib/fetchOg";
+import { createLaunchSchema } from "@/lib/validations";
 
 export async function POST(req: NextRequest) {
   const session = await getSession();
@@ -15,15 +16,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await req.json();
-  const { name, tagline, url, description, stack } = body;
-
-  if (!name || !tagline || !url) {
-    return NextResponse.json(
-      { error: "Missing required fields" },
-      { status: 400 },
-    );
+  const parsed = createLaunchSchema.safeParse(await req.json());
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
   }
+  const { name, tagline, url, description, stack } = parsed.data;
 
   const weekId = getCurrentWeekId();
 

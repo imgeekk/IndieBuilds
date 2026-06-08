@@ -1,6 +1,7 @@
 import { getSession } from "@/lib/session";
 import { getComments, createComment } from "@/lib/services";
 import { NextRequest, NextResponse } from "next/server";
+import { createCommentSchema } from "@/lib/validations";
 
 export async function GET(
   req: NextRequest,
@@ -21,21 +22,13 @@ export async function POST(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { body, isRoast } = await req.json();
-
-  if (!body?.trim()) {
-    return NextResponse.json(
-      { error: "Comment cannot be empty" },
-      { status: 400 },
-    );
+  const parsed = createCommentSchema.safeParse(await req.json());
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
   }
+  const { body, isRoast } = parsed.data;
 
-  if (body.length > 500) {
-    return NextResponse.json({ error: "Max 500 characters" }, { status: 400 });
-  }
-
-  const comment = await createComment({
-    body: body.trim(),
+  const comment = await createComment({ body: body.trim(),
     isRoast: isRoast ?? false,
     userId: session.user.id,
     launchId,
