@@ -17,10 +17,12 @@ export default function CommentSection({ launchId }: { launchId: string }) {
 
   async function handleSubmit() {
     if (!body.trim()) return;
+    const text = body;
+    const roast = isRoast;
+    setBody("");
+    setIsRoast(false);
 
-  await addComment({body, isRoast});
-      setBody("");
-      setIsRoast(false);
+    await addComment({ body: text, isRoast: roast, user: session?.user });
   }
 
   return (
@@ -70,7 +72,9 @@ export default function CommentSection({ launchId }: { launchId: string }) {
                   </span>
                 )}
                 <span className="text-[10px] text-muted ml-auto">
-                  {formatDistanceToNow(new Date(c.createdAt), { addSuffix: true })}
+                  {formatDistanceToNow(new Date(c.createdAt), {
+                    addSuffix: true,
+                  })}
                 </span>
               </div>
               <p className="text-sm text-secondary leading-relaxed">{c.body}</p>
@@ -82,55 +86,71 @@ export default function CommentSection({ launchId }: { launchId: string }) {
       {/* Input */}
       <div className="sticky bottom-0 bg-background z-10 border-t border-card-border pt-4 pb-2">
         <div className="absolute bottom-full left-0 right-0 h-6 bg-linear-to-t from-background to-transparent pointer-events-none" />
-      {session ? (
-        <div className="border border-card-border rounded-md p-4 bg-card">
-          <textarea
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            placeholder="What do you think? Drop honest feedback or a roast..."
-            rows={3}
-            maxLength={500}
-            className="w-full bg-transparent text-sm text-foreground placeholder-muted outline-none resize-none"
-          />
-          <div className="flex items-center justify-between mt-3 pt-3 border-t border-card-border">
-            <label className="flex items-center gap-2 cursor-pointer select-none">
-              <div
-                onClick={() => setIsRoast((r) => !r)}
-                className={`w-8 h-4 rounded-full transition-colors relative ${
-                  isRoast ? "bg-purple-500" : "bg-card-border"
-                }`}
-              >
+        {session ? (
+          <div className="border border-card-border rounded-md p-4 bg-card">
+            <textarea
+              value={body}
+              onChange={(e) => setBody(e.target.value)}
+              placeholder="What do you think? Drop honest feedback or a roast..."
+              rows={3}
+              maxLength={500}
+              className="w-full bg-transparent text-sm text-foreground placeholder-muted outline-none resize-none"
+            />
+            <div className="flex items-center justify-between mt-3 pt-3 border-t border-card-border">
+              <label className="flex items-center gap-2 cursor-pointer select-none">
                 <div
-                  className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-transform ${
-                    isRoast ? "translate-x-4" : "translate-x-0.5"
+                  onClick={() => setIsRoast((r) => !r)}
+                  className={`w-8 h-4 rounded-full transition-colors relative ${
+                    isRoast ? "bg-purple-500" : "bg-card-border"
                   }`}
-                />
+                >
+                  <div
+                    className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-transform ${
+                      isRoast ? "translate-x-4" : "translate-x-0.5"
+                    }`}
+                  />
+                </div>
+                <span className="text-xs text-muted flex items-center gap-1">
+                  <FaFire
+                    size={12}
+                    className={isRoast ? "text-purple-400" : ""}
+                  />
+                  Roast mode
+                </span>
+              </label>
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-card-border">
+                  {body.length}/500
+                </span>
+                <button
+                  onClick={handleSubmit}
+                  disabled={submitting || !body.trim()}
+                  className="bg-purple-500 hover:bg-purple-400 disabled:cursor-not-allowed text-white text-sm font-[inter-medium] px-4 h-9 rounded-sm transition-colors inline-flex items-center justify-center min-w-20"
+                >
+                  {submitting ? (
+                    <Spinner size="sm" className="text-white" />
+                  ) : isRoast ? (
+                    "Roast it"
+                  ) : (
+                    "Post"
+                  )}
+                </button>
               </div>
-              <span className="text-xs text-muted flex items-center gap-1">
-                <FaFire size={12} className={isRoast ? "text-purple-400" : ""} />
-                Roast mode
-              </span>
-            </label>
-            <div className="flex items-center gap-3">
-              <span className="text-xs text-card-border">{body.length}/500</span>
-              <button
-                onClick={handleSubmit}
-                disabled={submitting || !body.trim()}
-                className="bg-purple-500 hover:bg-purple-400 disabled:opacity-40 text-white text-sm font-[inter-medium] px-4 py-1.5 rounded-sm transition-colors inline-flex items-center justify-center min-w-[80px]"
-              >
-                {submitting ? <Spinner size="sm" className="text-white" /> : isRoast ? "Roast it" : "Post"}
-              </button>
             </div>
           </div>
-        </div>
-      ) : (
-        <button
-          onClick={() => signIn.social({ provider: "github", callbackURL: window.location.href })}
-          className="w-full py-3 border border-card-border rounded-sm text-sm text-muted hover:text-foreground hover:border-zinc-500 transition-colors"
-        >
-          Sign in with GitHub to comment
-        </button>
-      )}
+        ) : (
+          <button
+            onClick={() =>
+              signIn.social({
+                provider: "github",
+                callbackURL: window.location.href,
+              })
+            }
+            className="w-full py-3 border border-card-border rounded-sm text-sm text-muted hover:text-foreground hover:border-zinc-500 transition-colors"
+          >
+            Sign in with GitHub to comment
+          </button>
+        )}
       </div>
     </div>
   );

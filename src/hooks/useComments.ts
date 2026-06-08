@@ -29,6 +29,7 @@ export function useComments(launchId: string) {
     }: {
       body: string;
       isRoast: boolean;
+      user?: { name: string; githubHandle?: string | null; image?: string | null };
     }) => {
       const res = await fetch(`/api/launches/${launchId}/comments`, {
         method: "POST",
@@ -56,7 +57,11 @@ export function useComments(launchId: string) {
             ...newComment,
             id: "temp-id",
             createdAt: new Date().toISOString(),
-            user: { name: "You", githubHandle: null, image: null },
+            user: {
+              name: newComment.user?.name || "You",
+              githubHandle: newComment.user?.githubHandle || null,
+              image: newComment.user?.image || null,
+            }
           },
           ...old,
         ];
@@ -78,7 +83,7 @@ export function useComments(launchId: string) {
   });
 
   return {
-    comments: comments || [],
+    comments: comments as ApiComment[] || [],
     loading,
     error,
     addComment: addComment.mutateAsync,
