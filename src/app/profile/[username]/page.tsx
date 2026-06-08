@@ -86,13 +86,13 @@ async function ProfileContent({ params }: { params: { username: string } }) {
               <p className="text-xs text-muted">Total votes</p>
             </div>
             <div>
-              <p className="text-2xl font-[inter-bold] text-purple-400 flex items-center gap-1 leading-none">
-                <FaFire size={18} /> {user.streak}
+              <p className="text-2xl font-[inter-bold] text-purple-400 flex items-center justify-center">
+                <FaFire size={16} />{user.streak}
               </p>
-              <p className="text-xs text-muted mt-1">week streak</p>
+              <p className="text-xs text-muted">Week streaks</p>
             </div>
           </div>
-          <div className="overflow-x-auto max-w-full">
+          <div className="">
             <ActivityGrid activeWeeks={activeWeeks} allWeeks={last10Weeks} />
           </div>
         </div>
