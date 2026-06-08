@@ -125,7 +125,7 @@ export default function CommentSection({ launchId }: { launchId: string }) {
                 <button
                   onClick={handleSubmit}
                   disabled={submitting || !body.trim()}
-                  className="bg-purple-500 hover:bg-purple-400 disabled:cursor-not-allowed text-white text-sm font-[inter-medium] px-4 h-9 rounded-sm transition-colors inline-flex items-center justify-center min-w-20"
+                  className="bg-purple-500 hover:bg-purple-400 disabled:cursor-not-allowed text-white text-sm font-[inter-medium] px-4 h-9 rounded-sm transition-colors inline-flex items-center justify-center min-w-20 cursor-pointer"
                 >
                   {submitting ? (
                     <Spinner size="sm" className="text-white" />
@@ -146,7 +146,7 @@ export default function CommentSection({ launchId }: { launchId: string }) {
                 callbackURL: window.location.href,
               })
             }
-            className="w-full py-3 border border-card-border rounded-sm text-sm text-muted hover:text-foreground hover:border-zinc-500 transition-colors"
+            className="w-full py-3 border border-card-border rounded-sm text-sm text-muted hover:text-foreground hover:border-zinc-500 transition-colors cursor-pointer"
           >
             Sign in with GitHub to comment
           </button>

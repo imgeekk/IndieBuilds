@@ -36,7 +36,7 @@ export default function LaunchesClient({
           {isCurrentWeek && (
             <Link
               href="/submit"
-              className="inline-block mt-4 bg-purple-500 hover:bg-purple-400 text-black text-sm font-[inter-medium] px-5 py-2 rounded-sm transition-colors"
+              className="inline-block mt-4 bg-purple-500 hover:bg-purple-400 text-white text-sm font-[inter-medium] px-5 py-2 rounded-sm transition-colors"
             >
               Submit your launch
             </Link>
