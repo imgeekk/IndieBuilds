@@ -39,16 +39,11 @@ async function HomeContent() {
   const lastMonday = addWeeks(thisMonday, -1);
   const prevWeekId = `${lastMonday.getFullYear()}-W${format(lastMonday, "ww")}`;
 
-  const mapped = launches.map((l) => ({
-    ...l,
-    userHasVoted: l.votes.length > 0,
-  }));
-
   return (
     <HomeClient
       weekId={weekId}
       prevWeekId={prevWeekId}
-      initialLaunches={mapped}
+      initialLaunches={launches}
       currentUserGithubHandle={session?.user?.githubHandle || null}
     />
   );

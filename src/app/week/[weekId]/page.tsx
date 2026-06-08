@@ -43,11 +43,6 @@ async function WeekContent({ params }: { params: { weekId: string } }) {
   const nextWeekId = `${next.getFullYear()}-W${format(next, "ww")}`;
   const isNextFuture = next > new Date();
 
-  const mapped = launches.map((l) => ({
-    ...l,
-    userHasVoted: l.votes.length > 0,
-  }));
-
   return (
     <>
       <WeekHeader
@@ -57,8 +52,12 @@ async function WeekContent({ params }: { params: { weekId: string } }) {
         launchCount={launches.length}
       />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {mapped.map((l) => (
-          <LaunchCard key={l.id} launch={l} currentUserGithubHandle={session?.user.githubHandle || null}/>
+        {launches.map((l) => (
+          <LaunchCard
+            key={l.id}
+            launch={l}
+            currentUserGithubHandle={session?.user.githubHandle || null}
+          />
         ))}
       </div>
     </>

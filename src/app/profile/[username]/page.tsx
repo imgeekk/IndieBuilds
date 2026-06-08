@@ -32,11 +32,7 @@ export default function ProfilePage({
   );
 }
 
-async function ProfileContent({
-  params,
-}: {
-  params: { username: string };
-}) {
+async function ProfileContent({ params }: { params: { username: string } }) {
   const session = await getSession();
 
   const user = await getUserByGithubHandle(params.username);
@@ -49,12 +45,6 @@ async function ProfileContent({
 
   const last10Weeks = getLastNWeeks(10);
   const activeWeeks = launches.map((l) => l.weekId);
-
-  const mapped = launches.map((l) => ({
-    ...l,
-    userHasVoted: l.votes.length > 0,
-  }));
-
   return (
     <>
       <div className="flex items-center gap-4 mb-10">
@@ -65,7 +55,9 @@ async function ProfileContent({
           loading="lazy"
         />
         <div>
-          <h1 className="text-xl font-[inter-semibold] text-foreground">{user.name}</h1>
+          <h1 className="text-xl font-[inter-semibold] text-foreground">
+            {user.name}
+          </h1>
           <a
             href={`https://github.com/${user.githubHandle}`}
             target="_blank"
@@ -73,18 +65,20 @@ async function ProfileContent({
           >
             @{user.githubHandle}
           </a>
-          {user.bio && (
-            <p className="text-sm text-muted mt-1">{user.bio}</p>
-          )}
+          {user.bio && <p className="text-sm text-muted mt-1">{user.bio}</p>}
         </div>
 
         <div className="ml-auto flex items-start gap-6 text-center">
           <div>
-            <p className="text-2xl font-[inter-bold] text-foreground">{launches.length}</p>
+            <p className="text-2xl font-[inter-bold] text-foreground">
+              {launches.length}
+            </p>
             <p className="text-xs text-muted">launches</p>
           </div>
           <div className="mr-2">
-            <p className="text-2xl font-[inter-bold] text-foreground">{totalVotes}</p>
+            <p className="text-2xl font-[inter-bold] text-foreground">
+              {totalVotes}
+            </p>
             <p className="text-xs text-muted">total votes</p>
           </div>
           <div className="flex flex-col items-center gap-2">
@@ -103,8 +97,12 @@ async function ProfileContent({
         All launches
       </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {mapped.map((l) => (
-          <LaunchCard key={l.id} launch={l} currentUserGithubHandle={session?.user.githubHandle || null}/>
+        {launches.map((l) => (
+          <LaunchCard
+            key={l.id}
+            launch={l}
+            currentUserGithubHandle={session?.user.githubHandle || null}
+          />
         ))}
       </div>
     </>

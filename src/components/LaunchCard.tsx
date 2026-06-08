@@ -7,20 +7,15 @@ import { useRouter } from "next/navigation";
 import { FaExternalLinkAlt, FaImage } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { MdOutlineComment } from "react-icons/md";
+import { ApiLaunch } from "@/lib/types";
 
-type Launch = {
-  id: string;
-  name: string;
-  tagline: string;
-  url: string;
-  stack: string[];
-  ogImage?: string | null;
-  user: { name: string; githubHandle: string | null; image: string | null };
-  _count: { votes: number; comments: number };
-  userHasVoted?: boolean;
-};
-
-export default function LaunchCard({ launch, currentUserGithubHandle }: { launch: Launch; currentUserGithubHandle: string | null }) {
+export default function LaunchCard({
+  launch,
+  currentUserGithubHandle,
+}: {
+  launch: ApiLaunch;
+  currentUserGithubHandle: string | null;
+}) {
   const { toggleVote } = useVote();
   const router = useRouter();
 
@@ -30,7 +25,6 @@ export default function LaunchCard({ launch, currentUserGithubHandle }: { launch
       return;
     }
     toggleVote(launch.id);
-    
   }
 
   return (
@@ -102,54 +96,54 @@ export default function LaunchCard({ launch, currentUserGithubHandle }: { launch
               </div>
             </section>
             <div className="mt-auto pt-3 flex items-center gap-3 flex-wrap">
-                {/* Builder share — left side */}
-                {currentUserGithubHandle === launch.user.githubHandle && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      const text = encodeURIComponent(
-                        `Check out my launch at IndieBuilds: ${launch.name} - ${launch.tagline}`
-                      );
-                      const url = encodeURIComponent(
-                        `${process.env.NEXT_PUBLIC_APP_URL}/launch/${launch.id}`
-                      );
-                      window.open(
-                        `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
-                        "_blank",
-                        "noopener,noreferrer"
-                      );
-                    }}
-                    className="bg-purple-500 hover:bg-purple-400 text-white text-xs font-[inter-medium] px-4 py-2 rounded-xs transition-colors flex gap-1 items-center cursor-alias"
-                  >
-                    Share your launch on <FaXTwitter size={14} />
-                  </button>
-                )}
-                <div className="ml-auto flex items-center gap-3">
-                  <Link
-                    href={`/profile/${launch.user.githubHandle ?? ""}`}
-                    className="flex items-center gap-1.5 text-sm text-muted hover:text-foreground transition-colors"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <img
-                      src={launch.user.image ?? ""}
-                      alt={launch.user.name}
-                      className="w-6 h-6 rounded-full"
-                      loading="lazy"
-                    />
-                    {launch.user.githubHandle ?? launch.user.name}
-                  </Link>
+              {/* Builder share — left side */}
+              {currentUserGithubHandle === launch.user.githubHandle && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const text = encodeURIComponent(
+                      `Check out my launch at IndieBuilds: ${launch.name} - ${launch.tagline}`,
+                    );
+                    const url = encodeURIComponent(
+                      `${process.env.NEXT_PUBLIC_APP_URL}/launch/${launch.id}`,
+                    );
+                    window.open(
+                      `https://twitter.com/intent/tweet?text=${text}&url=${url}`,
+                      "_blank",
+                      "noopener,noreferrer",
+                    );
+                  }}
+                  className="bg-purple-500 hover:bg-purple-400 text-white text-xs font-[inter-medium] px-4 py-2 rounded-xs transition-colors flex gap-1 items-center cursor-alias"
+                >
+                  Share your launch on <FaXTwitter size={14} />
+                </button>
+              )}
+              <div className="ml-auto flex items-center gap-3">
+                <Link
+                  href={`/profile/${launch.user.githubHandle ?? ""}`}
+                  className="flex items-center gap-1.5 text-sm text-muted hover:text-foreground transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <img
+                    src={launch.user.image ?? ""}
+                    alt={launch.user.name}
+                    className="w-6 h-6 rounded-full"
+                    loading="lazy"
+                  />
+                  {launch.user.githubHandle ?? launch.user.name}
+                </Link>
 
-                  {/* Comment count */}
-                  <Link
-                    href={`/launch/${launch.id}`}
-                    className="flex items-center gap-1 text-sm text-muted hover:text-foreground transition-colors"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <MdOutlineComment size={16} />
-                    {launch._count.comments}
-                  </Link>
-                </div>
+                {/* Comment count */}
+                <Link
+                  href={`/launch/${launch.id}`}
+                  className="flex items-center gap-1 text-sm text-muted hover:text-foreground transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <MdOutlineComment size={16} />
+                  {launch._count.comments}
+                </Link>
               </div>
+            </div>
           </div>
         </div>
       </div>

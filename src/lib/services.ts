@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { ApiComment, ApiLaunch } from "./types";
 
 // Week services
 
@@ -21,8 +22,11 @@ export function touchUserLastShipped(userId: string) {
 
 // Launch services
 
-export function getWeekLaunches(weekId: string, userId?: string) {
-  return prisma.launch.findMany({
+export async function getWeekLaunches(
+  weekId: string,
+  userId?: string,
+): Promise<ApiLaunch[]> {
+  const launches = await prisma.launch.findMany({
     where: { weekId },
     include: {
       user: { select: { name: true, githubHandle: true, image: true } },
@@ -31,10 +35,25 @@ export function getWeekLaunches(weekId: string, userId?: string) {
     },
     orderBy: { votes: { _count: "desc" } },
   });
+  return launches.map((l) => ({
+    id: l.id,
+    name: l.name,
+    tagline: l.tagline,
+    url: l.url,
+    weekId: l.weekId,
+    stack: l.stack,
+    ogImage: l.ogImage,
+    user: l.user,
+    _count: l._count,
+    userHasVoted: l.votes.length > 0,
+  }));
 }
 
-export function getUserLaunches(userId: string, currentUserId?: string) {
-  return prisma.launch.findMany({
+export async function getUserLaunches(
+  userId: string,
+  currentUserId?: string,
+): Promise<ApiLaunch[]> {
+  const launches = await prisma.launch.findMany({
     where: { userId },
     include: {
       user: { select: { name: true, githubHandle: true, image: true } },
@@ -43,6 +62,18 @@ export function getUserLaunches(userId: string, currentUserId?: string) {
     },
     orderBy: { createdAt: "desc" },
   });
+  return launches.map((l) => ({
+    id: l.id,
+    name: l.name,
+    tagline: l.tagline,
+    url: l.url,
+    weekId: l.weekId,
+    stack: l.stack,
+    ogImage: l.ogImage,
+    user: l.user,
+    _count: l._count,
+    userHasVoted: l.votes.length > 0,
+  }));
 }
 
 export function getLaunchById(id: string) {
@@ -110,26 +141,40 @@ export async function toggleVote(launchId: string, userId: string) {
 
 // Comment services
 
-export function getComments(launchId: string) {
-  return prisma.comment.findMany({
+export async function getComments(launchId: string): Promise<ApiComment[]> {
+  const comments = await prisma.comment.findMany({
     where: { launchId },
     include: {
       user: { select: { name: true, githubHandle: true, image: true } },
     },
     orderBy: { createdAt: "desc" },
   });
+  return comments.map((c) => ({
+    id: c.id,
+    body: c.body,
+    isRoast: c.isRoast,
+    createdAt: c.createdAt.toISOString(),
+    user: c.user,
+  }));
 }
 
-export function createComment(data: {
+export async function createComment(data: {
   body: string;
   isRoast: boolean;
   userId: string;
   launchId: string;
-}) {
-  return prisma.comment.create({
+}): Promise<ApiComment> {
+  const comment = await prisma.comment.create({
     data,
     include: {
       user: { select: { name: true, githubHandle: true, image: true } },
     },
   });
+  return {
+    id: comment.id,
+    body: comment.body,
+    isRoast: comment.isRoast,
+    createdAt: comment.createdAt.toISOString(),
+    user: comment.user,
+  };
 }
