@@ -1,11 +1,10 @@
 import { getSession } from "@/lib/session";
 import { getWeekById, getWeekLaunches } from "@/lib/services";
 import Navbar from "@/components/Navbar";
-import { addWeeks, startOfWeek, format } from "date-fns";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { Loader } from "@/components/loader-4";
-import { getCurrentWeekId } from "@/lib/week";
+import { getCurrentWeekId, getNextWeekId, getPrevWeekId, getWeekRange } from "@/lib/week";
 import LaunchesClient from "@/components/LaunchesClient";
 
 export default function WeekPage({ params }: { params: { weekId: string } }) {
@@ -36,12 +35,9 @@ async function WeekContent({ params }: { params: { weekId: string } }) {
 
   const launches = await getWeekLaunches(weekId, session?.user?.id);
 
-  const weekStart = startOfWeek(week.startDate, { weekStartsOn: 1 });
-  const prev = addWeeks(weekStart, -1);
-  const next = addWeeks(weekStart, 1);
-  const prevWeekId = `${prev.getFullYear()}-W${format(prev, "ww")}`;
-  const nextWeekId = `${next.getFullYear()}-W${format(next, "ww")}`;
-  const isNextFuture = next > new Date();
+  const prevWeekId = getPrevWeekId(weekId);
+  const nextWeekId = getNextWeekId(weekId);
+  const isNextFuture = getWeekRange(nextWeekId).start > new Date();
 
   const currentWeekId = getCurrentWeekId();
   const isCurrentWeek = weekId === currentWeekId;

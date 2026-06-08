@@ -1,27 +1,23 @@
-import { startOfWeek, endOfWeek, format } from "date-fns";
+import { startOfISOWeek, endOfISOWeek, addWeeks, format, getISOWeek, getISOWeekYear } from "date-fns";
 
 export function getCurrentWeekId(): string {
   const now = new Date();
-  const weekStart = startOfWeek(now, { weekStartsOn: 1 });
-  const year = weekStart.getFullYear();
-  const weekNum = format(weekStart, "ww");
-  return `${year}-W${weekNum}`;
+  return `${getISOWeekYear(now)}-W${String(getISOWeek(now)).padStart(2, "0")}`;
 }
 
 export function getWeekRange(weekId: string): { start: Date; end: Date } {
-  // weekId = "2025-W23"
   const [yearStr, weekStr] = weekId.split("-W");
   const year = parseInt(yearStr);
   const week = parseInt(weekStr);
 
-  // Get Jan 4th of that year (always in week 1)
+  // Jan 4th is always in ISO week 1
   const jan4 = new Date(year, 0, 4);
-  const jan4Week = startOfWeek(jan4, { weekStartsOn: 1 });
-  const weekStart = new Date(jan4Week.getTime() + (week - 1) * 7 * 24 * 60 * 60 * 1000);
+  // Use addWeeks instead of raw ms arithmetic — safe across DST boundaries
+  const weekStart = addWeeks(startOfISOWeek(jan4), week - 1);
 
   return {
     start: weekStart,
-    end: endOfWeek(weekStart, { weekStartsOn: 1 }),
+    end: endOfISOWeek(weekStart),
   };
 }
 
@@ -33,14 +29,24 @@ export function formatWeekLabel(weekId: string): string {
 export function getLastNWeeks(n: number): string[] {
   const weeks: string[] = [];
   const now = new Date();
-  
+  const currentWeekStart = startOfISOWeek(now);
+
   for (let i = 0; i < n; i++) {
-    const date = new Date(now.getTime() - i * 7 * 24 * 60 * 60 * 1000);
-    const weekStart = startOfWeek(date, { weekStartsOn: 1 });
-    const year = weekStart.getFullYear();
-    const weekNum = format(weekStart, "ww");
-    weeks.unshift(`${year}-W${weekNum}`);
+    const weekStart = addWeeks(currentWeekStart, -i);
+    weeks.unshift(`${getISOWeekYear(weekStart)}-W${String(getISOWeek(weekStart)).padStart(2, "0")}`);
   }
-  
+
   return weeks;
+}
+
+export function getPrevWeekId(weekId: string): string {
+  const { start } = getWeekRange(weekId);
+  const prev = addWeeks(start, -1);
+  return `${getISOWeekYear(prev)}-W${String(getISOWeek(prev)).padStart(2, "0")}`;
+}
+
+export function getNextWeekId(weekId: string): string {
+  const { start } = getWeekRange(weekId);
+  const next = addWeeks(start, 1);
+  return `${getISOWeekYear(next)}-W${String(getISOWeek(next)).padStart(2, "0")}`;
 }

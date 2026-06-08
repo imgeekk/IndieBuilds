@@ -1,8 +1,7 @@
 import { getSession } from "@/lib/session";
-import { getCurrentWeekId } from "@/lib/week";
+import { getCurrentWeekId, getPrevWeekId } from "@/lib/week";
 import { getWeekLaunches } from "@/lib/services";
 import Navbar from "@/components/Navbar";
-import { addWeeks, startOfWeek, format } from "date-fns";
 import { Suspense } from "react";
 import { Loader } from "@/components/loader-4";
 import LaunchesClient from "@/components/LaunchesClient";
@@ -34,15 +33,11 @@ async function HomeContent() {
 
   const launches = await getWeekLaunches(weekId, session?.user?.id);
 
-  const now = new Date();
-  const thisMonday = startOfWeek(now, { weekStartsOn: 1 });
-  const lastMonday = addWeeks(thisMonday, -1);
-  const prevWeekId = `${lastMonday.getFullYear()}-W${format(lastMonday, "ww")}`;
 
   return (
     <LaunchesClient
       weekId={weekId}
-      prevWeekId={prevWeekId}
+      prevWeekId={getPrevWeekId(weekId)}
       nextWeekId={null} // Obv there is no next week dude cuz this is the current week page
       initialLaunches={launches}
       currentUserGithubHandle={session?.user?.githubHandle || null}

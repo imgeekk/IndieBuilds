@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { formatWeekLabel } from "../lib/week";
+import { formatWeekLabel, getCurrentWeekId } from "../lib/week";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 type Props = {
@@ -10,7 +10,7 @@ type Props = {
 };
 
 export default function WeekHeader({ weekId, prevWeekId, nextWeekId, launchCount }: Props) {
-  const isCurrentWeek = weekId === getCurrentWeekIdStatic();
+  const isCurrentWeek = weekId === getCurrentWeekId();
 
   return (
     <div className="flex items-center justify-between mb-6 text-secondary">
