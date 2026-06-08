@@ -26,13 +26,13 @@ export default function CommentSection({ launchId }: { launchId: string }) {
   }
 
   return (
-    <div className="flex flex-col flex-1 mt-8">
+    <div className="flex flex-col mt-8 min-h-[50dvh]">
       <h3 className="text-sm font-[inter-semibold] text-muted uppercase mb-4">
         Discussion ({comments.length})
       </h3>
 
       {/* Comment list */}
-      <div className="flex flex-col gap-4 flex-1 overflow-y-auto min-h-0">
+      <div className="flex flex-col gap-4 flex-1">
         {loading && (
           <div className="flex justify-center py-8">
             <Loader />

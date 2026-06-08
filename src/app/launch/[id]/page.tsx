@@ -42,9 +42,9 @@ export async function generateMetadata({
 
 export default function LaunchPage({ params }: { params: { id: string } }) {
   return (
-    <div className="min-h-screen bg-background text-secondary font-[inter-regular] flex flex-col">
+    <div className="min-h-screen bg-background text-secondary font-[inter-regular]">
       <Navbar />
-      <main className="max-w-2xl mx-auto px-4 pt-10 w-full flex-1 flex flex-col">
+      <main className="max-w-2xl mx-auto px-4 pt-10">
         <Suspense
           fallback={
             <div className="flex justify-center py-20">
@@ -68,7 +68,7 @@ async function LaunchContent({ params }: { params: { id: string } }) {
   if (!launch) notFound();
 
   return (
-    <div className="flex flex-col flex-1">
+    <>
       <Link
         href={`/week/${launch.weekId}`}
         className="flex items-center gap-1.5 text-sm text-muted hover:text-foreground transition-colors mb-8"
@@ -133,6 +133,6 @@ async function LaunchContent({ params }: { params: { id: string } }) {
       </div>
 
       <CommentSection launchId={launch.id} />
-    </div>
+    </>
   );
 }
