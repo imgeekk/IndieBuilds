@@ -77,7 +77,7 @@ export default function SubmitPage() {
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
               placeholder="e.g. Cron Monitor"
               maxLength={60}
-              className="p-1 outline-offset-1 focus:outline-1 outline-purple-500 "
+              className={`bg-card border rounded-md w-full px-3 py-2 text-foreground text-sm placeholder:text-muted outline-offset-1 focus:outline-1 outline-purple-500 ${fieldErrors.name ? "border-red-500" : "border-card-border"}`}
             />
           </Field>
 
@@ -87,7 +87,7 @@ export default function SubmitPage() {
               onChange={(e) => setForm((f) => ({ ...f, tagline: e.target.value }))}
               placeholder="One sentence that says what it does"
               maxLength={100}
-              className="p-1 outline-offset-1 focus:outline-1 outline-purple-500"
+              className={`bg-card border rounded-md w-full px-3 py-2 text-foreground text-sm placeholder:text-muted outline-offset-1 focus:outline-1 outline-purple-500 ${fieldErrors.tagline ? "border-red-500" : "border-card-border"}`}
             />
           </Field>
 
@@ -96,7 +96,7 @@ export default function SubmitPage() {
               value={form.url}
               onChange={(e) => setForm((f) => ({ ...f, url: e.target.value }))}
               placeholder="https://yourapp.com"
-              className="p-1 outline-offset-1 focus:outline-1 outline-purple-500"
+              className={`bg-card border rounded-md w-full px-3 py-2 text-foreground text-sm placeholder:text-muted outline-offset-1 focus:outline-1 outline-purple-500 ${fieldErrors.url ? "border-red-500" : "border-card-border"}`}
             />
           </Field>
 
@@ -106,7 +106,7 @@ export default function SubmitPage() {
               onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
               placeholder="What problem does it solve? How did you build it?"
               rows={4}
-              className="p-1 outline-offset-1 focus:outline-1 outline-purple-500 resize-none"
+              className="bg-card border border-card-border rounded-md w-full px-3 py-2 text-foreground text-sm placeholder:text-muted outline-offset-1 focus:outline-1 outline-purple-500 resize-none"
             />
           </Field>
 
@@ -122,30 +122,14 @@ export default function SubmitPage() {
 
           <button
             onClick={handleSubmit}
-            disabled={submitting}
-            className="bg-purple-500 hover:bg-purple-400 disabled:opacity-50 text-white cursor-pointer font-[inter-medium] py-2.5 rounded-md transition-colors"
+            disabled={submitting || !form.name || !form.tagline || !form.url || Object.values(fieldErrors).some(Boolean)}
+            className="bg-purple-500 hover:bg-purple-400 disabled:opacity-50 disabled:pointer-events-none disabled:bg-muted text-white cursor-pointer font-[inter-medium] py-2.5 rounded-md transition-colors"
           >
             {submitting ? <Spinner size="sm" className="text-white" /> : "Launch it"}
           </button>
 
         </div>
       </main>
-
-      <style jsx>{`
-        .input {
-          width: 100%;
-          background: #18181b;
-          border: 1px solid #3f3f46;
-          border-radius: 8px;
-          padding: 8px 12px;
-          color: white;
-          font-size: 14px;
-          outline: none;
-          transition: border-color 0.15s;
-        }
-        .input:focus { border-color: #71717a; }
-        .input::placeholder { color: #52525b; }
-      `}</style>
     </div>
   );
 }

@@ -171,7 +171,7 @@ export default function TagInput({
         onFocus={handleFocus}
         placeholder={stack.length >= max ? "Max tags reached" : placeholder}
         disabled={stack.length >= max}
-        className="w-full p-1 outline-offset-1 focus:outline-1 outline-purple-500 disabled:opacity-40"
+        className="bg-card border border-card-border rounded-md w-full px-3 py-2 text-foreground text-sm placeholder:text-muted outline-offset-1 focus:outline-1 outline-purple-500 disabled:opacity-40"
       />
       {isOpen && filtered.length > 0 && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-card-border rounded-md shadow-md z-50 max-h-48 overflow-y-auto [scrollbar-gutter:stable]">
