@@ -7,6 +7,7 @@ import { useSubmitLaunch } from "@/hooks/useSubmitLaunch";
 import { Loader } from "@/components/loader-4";
 import TagInput from "@/components/TagInput";
 import { Spinner } from "@/components/ui/spinner";
+import { createLaunchSchema } from "@/lib/validations";
 
 export default function SubmitPage() {
   const { data: session, isPending } = useSession();
@@ -19,6 +20,7 @@ export default function SubmitPage() {
     description: "",
     stack: [] as string[],
   });
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
   if (isPending) {
     return (
@@ -49,17 +51,21 @@ export default function SubmitPage() {
   }
 
   async function handleSubmit() {
-    if (!form.name || !form.tagline || !form.url) {
-      setError("Name, tagline and URL are required.");
+    const result = createLaunchSchema.safeParse(form);
+
+    if (!result.success) {
+      const errors: Record<string, string> = {};
+      for (const issue of result.error.issues) {
+        const field = issue.path[0] as string;
+        if (!errors[field]) errors[field] = issue.message;
+      }
+      setFieldErrors(errors);
       return;
     }
-    submit({
-      name: form.name,
-      tagline: form.tagline,
-      url: form.url,
-      description: form.description,
-      stack: form.stack,
-    });
+
+    setFieldErrors({});
+    setError("");
+    submit(result.data);
   }
 
   return (
@@ -74,30 +80,57 @@ export default function SubmitPage() {
           <Field label="Project name">
             <input
               value={form.name}
-              onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+              onChange={(e) => {
+                setForm((f) => ({ ...f, name: e.target.value }));
+                setFieldErrors((prev) => ({ ...prev, name: "" }));
+              }}
+              onBlur={() => {
+                const r = createLaunchSchema.shape.name.safeParse(form.name);
+                if (!r.success) setFieldErrors((prev) => ({ ...prev, name: r.error.issues[0].message }));
+                else setFieldErrors((prev) => ({ ...prev, name: "" }));
+              }}
               placeholder="e.g. Cron Monitor"
               maxLength={60}
               className={`bg-card border rounded-md w-full px-3 py-2 text-foreground text-sm placeholder:text-muted outline-offset-1 focus:outline-1 outline-purple-500 ${fieldErrors.name ? "border-red-500" : "border-card-border"}`}
             />
+            {fieldErrors.name && <p className="text-xs text-red-400 mt-1">{fieldErrors.name}</p>}
           </Field>
 
           <Field label="Tagline" hint="Max 100 characters">
             <input
               value={form.tagline}
-              onChange={(e) => setForm((f) => ({ ...f, tagline: e.target.value }))}
+              onChange={(e) => {
+                setForm((f) => ({ ...f, tagline: e.target.value }));
+                setFieldErrors((prev) => ({ ...prev, tagline: "" }));
+              }}
+              onBlur={() => {
+                const r = createLaunchSchema.shape.tagline.safeParse(form.tagline);
+                if (!r.success) setFieldErrors((prev) => ({ ...prev, tagline: r.error.issues[0].message }));
+                else setFieldErrors((prev) => ({ ...prev, tagline: "" }));
+              }}
               placeholder="One sentence that says what it does"
               maxLength={100}
               className={`bg-card border rounded-md w-full px-3 py-2 text-foreground text-sm placeholder:text-muted outline-offset-1 focus:outline-1 outline-purple-500 ${fieldErrors.tagline ? "border-red-500" : "border-card-border"}`}
             />
+            {fieldErrors.tagline && <p className="text-xs text-red-400 mt-1">{fieldErrors.tagline}</p>}
           </Field>
 
           <Field label="URL">
             <input
               value={form.url}
-              onChange={(e) => setForm((f) => ({ ...f, url: e.target.value }))}
+              onChange={(e) => {
+                setForm((f) => ({ ...f, url: e.target.value }));
+                setFieldErrors((prev) => ({ ...prev, url: "" }));
+              }}
+              onBlur={() => {
+                const r = createLaunchSchema.shape.url.safeParse(form.url);
+                if (!r.success) setFieldErrors((prev) => ({ ...prev, url: r.error.issues[0].message }));
+                else setFieldErrors((prev) => ({ ...prev, url: "" }));
+              }}
               placeholder="https://yourapp.com"
               className={`bg-card border rounded-md w-full px-3 py-2 text-foreground text-sm placeholder:text-muted outline-offset-1 focus:outline-1 outline-purple-500 ${fieldErrors.url ? "border-red-500" : "border-card-border"}`}
             />
+            {fieldErrors.url && <p className="text-xs text-red-400 mt-1">{fieldErrors.url}</p>}
           </Field>
 
           <Field label="Description" hint="Optional — shown on launch page">
