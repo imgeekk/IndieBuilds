@@ -41,7 +41,7 @@ export function useSubmitLaunch() {
   return {
     submit: submit.mutate,
     submitting: submit.isPending,
-    error: submit.error?.message,
+    error: error || (submit.error?.message ?? null),
     setError,
   };
 }
